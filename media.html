@@ -1,0 +1,2157 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media Pembelajaran - Sumber Daya Alam</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Nunito', sans-serif; }
+    
+    .nav-btn.active {
+      background: linear-gradient(135deg, #059669, #10b981);
+      color: white;
+      transform: scale(1.05);
+    }
+    
+    .card-sda {
+      transition: all 0.3s ease;
+    }
+    
+    .card-sda:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .quiz-option {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .quiz-option:hover:not(.selected):not(.correct):not(.wrong) {
+      background: #d1fae5;
+      border-color: #10b981;
+    }
+    
+    .quiz-option.selected {
+      background: #fef3c7;
+      border-color: #f59e0b;
+    }
+    
+    .quiz-option.correct {
+      background: #d1fae5;
+      border-color: #10b981;
+    }
+    
+    .quiz-option.wrong {
+      background: #fee2e2;
+      border-color: #ef4444;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .float-animation {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.6); }
+    }
+    
+    .glow-animation {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+    
+    .progress-bar {
+      transition: width 0.5s ease;
+    }
+
+    /* Racing Animation */
+    @keyframes runRight {
+      0% { transform: translateX(0) scaleX(1); }
+      50% { transform: translateX(calc(var(--distance, 0) * 1px)) scaleX(1); }
+      100% { transform: translateX(calc(var(--distance, 0) * 1px)) scaleX(1); }
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0) rotateZ(0deg); opacity: 1; }
+      50% { transform: translateY(40px) rotateZ(90deg); opacity: 0.7; }
+      100% { transform: translateY(80px) rotateZ(180deg); opacity: 0; }
+    }
+
+    @keyframes celebrate {
+      0%, 100% { transform: scale(1) rotateZ(0deg); }
+      25% { transform: scale(1.1) rotateZ(-5deg); }
+      75% { transform: scale(1.1) rotateZ(5deg); }
+    }
+
+    .racer {
+      transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-size: 3rem;
+    }
+
+    .racer.running {
+      animation: runRight 0.8s ease-out forwards;
+    }
+
+    .racer.falling {
+      animation: fall 0.8s ease-in forwards;
+    }
+
+    .racer.celebrating {
+      animation: celebrate 0.6s ease-in-out;
+    }
+
+    .finish-line {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: repeating-linear-gradient(
+        90deg,
+        #000 0px,
+        #000 10px,
+        #fff 10px,
+        #fff 20px
+      );
+    }
+
+    .track {
+      background: linear-gradient(180deg, #90EE90 0%, #7CCD7C 100%);
+      border-radius: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .answer-feedback {
+      animation: slideDown 0.4s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+  <div id="app" class="h-full w-full overflow-auto"><!-- Header -->
+   <header class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white shadow-xl">
+    <div class="max-w-6xl mx-auto px-4 py-6">
+     <div class="flex items-center gap-4">
+      <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center float-animation">
+       <svg class="w-10 h-10" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+       </svg>
+      </div>
+      <div>
+       <h1 id="main-title" class="text-2xl md:text-3xl font-extrabold tracking-tight">Sumber Daya Alam</h1>
+       <p id="subtitle" class="text-emerald-100 text-sm md:text-base">Media Pembelajaran IPS - SMP Kelas VII</p>
+      </div>
+     </div>
+    </div>
+   </header><!-- Navigation -->
+   <nav class="bg-white/80 backdrop-blur-lg shadow-lg sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-3">
+     <div class="flex flex-wrap gap-2 justify-center">
+       <button onclick="showSection('beranda')" class="nav-btn active px-4 py-2 rounded-full text-sm font-semibold text-gray-600 hover:bg-emerald-100 transition-all" data-section="beranda"> 🏠 Beranda </button>
+       <button onclick="showSection('materi')" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-gray-600 hover:bg-emerald-100 transition-all" data-section="materi"> 📚 Materi </button>
+       <button onclick="showSection('jenis')" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-gray-600 hover:bg-emerald-100 transition-all" data-section="jenis"> 🌿 Jenis SDA </button>
+       <button onclick="showSection('video')" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-gray-600 hover:bg-emerald-100 transition-all" data-section="video"> 🎬 Video </button>
+       <button onclick="showSection('kuis')" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-gray-600 hover:bg-emerald-100 transition-all" data-section="kuis"> 🏃 Kuis </button>
+       <button onclick="showSection('dashboard-guru')" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-all" data-section="dashboard-guru"> 🧑‍🏫 Dashboard Guru </button>
+     </div>
+    </div>
+   </nav><!-- Main Content -->
+   <main class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Dashboard Guru Section -->
+    <section id="dashboard-guru" class="section-content hidden">
+      <div id="guru-login-panel" class="max-w-lg mx-auto bg-white rounded-3xl shadow-xl p-8 mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2 text-center">Login Dashboard Guru</h2>
+        <p class="text-center text-gray-500 text-sm mb-6">Hanya guru yang dapat mengakses Dashboard Guru</p>
+        <form id="form-login-guru" class="space-y-4">
+          <div>
+            <label for="guru-username" class="block font-semibold mb-1">Username</label>
+            <input id="guru-username" type="text" class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-emerald-500 focus:outline-none" placeholder="Masukkan username guru" required />
+          </div>
+          <div>
+            <label for="guru-password" class="block font-semibold mb-1">Password</label>
+            <input id="guru-password" type="password" class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-emerald-500 focus:outline-none" placeholder="Masukkan password guru" required />
+          </div>
+          <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-full font-bold hover:opacity-90 transition-all shadow-lg">Login Guru</button>
+          <div id="guru-login-error" class="text-red-600 text-sm hidden text-center"></div>
+        </form>
+      </div>
+
+      <div id="dashboard-guru-content" class="hidden">
+      <div class="max-w-lg mx-auto mb-4 flex justify-end">
+        <button id="btn-logout-guru" class="bg-gradient-to-r from-slate-500 to-gray-600 text-white px-5 py-2 rounded-full font-semibold hover:opacity-90 transition-all">Logout Guru</button>
+      </div>
+      <div class="max-w-lg mx-auto bg-white rounded-3xl shadow-xl p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Dashboard Guru - Atur Kode Kuis</h2>
+        <form id="form-dashboard-guru" class="space-y-4">
+          <div>
+            <label for="kode-kuis-guru" class="block font-semibold mb-1">Kode Kuis</label>
+            <input id="kode-kuis-guru" type="text" class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-emerald-500 focus:outline-none" placeholder="Masukkan kode kuis" required />
+          </div>
+          <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-full font-bold hover:opacity-90 transition-all shadow-lg">Simpan Kode Kuis</button>
+          <div id="dashboard-guru-success" class="text-green-600 text-sm mt-2 hidden text-center"></div>
+        </form>
+      </div>
+      <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl p-8 mt-8">
+        <h3 class="text-xl font-bold text-gray-800 mb-6 text-center">Animasi Peserta Kuis</h3>
+        <div class="flex flex-col items-center mb-6">
+          <div class="flex gap-2">
+            <button id="btn-mulai-kuis-guru" class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-full font-bold hover:opacity-90 transition-all shadow-lg mb-2">Mulai Kuis</button>
+            <button id="btn-akhiri-kuis-guru" class="bg-gradient-to-r from-red-500 to-rose-600 text-white px-8 py-3 rounded-full font-bold hover:opacity-90 transition-all shadow-lg mb-2">Akhiri Kuis</button>
+          </div>
+          <span id="status-mulai-kuis-guru" class="text-sm"></span>
+        </div>
+        <div id="guru-animasi-peserta" class="flex flex-wrap gap-6 justify-center"></div>
+        <!-- Tabel hasil peserta, hanya tampil jika kuis sudah diakhiri -->
+        <div id="guru-hasil-peserta" class="mt-8 hidden">
+          <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Hasil Kuis Peserta</h3>
+          <div id="guru-tabel-hasil-peserta" class="overflow-x-auto"></div>
+        </div>
+      </div>
+
+      <!-- Animasi Balapan Realtime Section -->
+      <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl p-8 mt-8">
+        <h3 class="text-2xl font-bold text-gray-800 mb-2 text-center">🏁 Animasi Balapan Realtime</h3>
+        <p class="text-center text-gray-500 text-sm mb-4">Trek bergerak sesuai jawaban benar siswa saat mengerjakan kuis</p>
+        <div class="mb-4 flex gap-2 justify-center">
+          <button id="btn-refresh-balapan" class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-2 rounded-full font-semibold hover:opacity-90 transition-all">🔄 Refresh</button>
+          <button id="btn-auto-refresh-balapan" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-6 py-2 rounded-full font-semibold hover:opacity-90 transition-all">▶ Live (Auto)</button>
+          <button id="btn-reset-progress" class="bg-gradient-to-r from-slate-500 to-gray-600 text-white px-6 py-2 rounded-full font-semibold hover:opacity-90 transition-all">🗑️ Reset Progress</button>
+        </div>
+        <div id="guru-animasi-balapan" class="space-y-4">
+          <div class="text-center text-gray-400">Belum ada peserta yang mengerjakan kuis.</div>
+        </div>
+      </div>
+
+      <!-- Leaderboard Realtime Section -->
+      <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl p-8 mt-8">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">🏆 Leaderboard Realtime</h3>
+        <div class="mb-4 flex gap-2 justify-center">
+          <button id="btn-refresh-leaderboard" class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-6 py-2 rounded-full font-semibold hover:opacity-90 transition-all">🔄 Refresh</button>
+          <button id="btn-auto-refresh-leaderboard" class="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-2 rounded-full font-semibold hover:opacity-90 transition-all">▶ Auto Refresh</button>
+        </div>
+        <div id="guru-leaderboard" class="space-y-3">
+          <div class="text-center text-gray-400">Belum ada data leaderboard.</div>
+        </div>
+      </div>
+
+      <!-- Ranking Siswa Section -->
+      <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl p-8 mt-8">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">🥇 Ranking Siswa Akhir</h3>
+        <div class="mb-4 flex gap-2 justify-center">
+          <button id="btn-refresh-ranking" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full font-semibold hover:opacity-90 transition-all">🔄 Refresh Ranking</button>
+          <button id="btn-clear-scores" class="bg-gradient-to-r from-red-500 to-rose-500 text-white px-6 py-2 rounded-full font-semibold hover:opacity-90 transition-all">🗑️ Hapus Semua Skor</button>
+        </div>
+        <div id="guru-ranking" class="space-y-3">
+          <div class="text-center text-gray-400">Belum ada data ranking.</div>
+        </div>
+        <!-- Export Button -->
+        <button id="btn-export-ranking" class="w-full mt-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-2 rounded-full font-semibold hover:opacity-90 transition-all">📥 Export Ranking ke CSV</button>
+      </div>
+
+      <!-- Multiplayer Quiz Status Section -->
+      <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl p-8 mt-8">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">👥 Status Multiplayer Quiz</h3>
+        <div class="grid md:grid-cols-3 gap-4 mb-6">
+          <div class="bg-gradient-to-br from-blue-50 to-cyan-50 p-4 rounded-xl border border-blue-100">
+            <p class="text-gray-600 text-sm">Total Peserta</p>
+            <p id="multiplayer-total-peserta" class="text-3xl font-bold text-blue-600">0</p>
+          </div>
+          <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-xl border border-green-100">
+            <p class="text-gray-600 text-sm">Sudah Selesai</p>
+            <p id="multiplayer-selesai" class="text-3xl font-bold text-green-600">0</p>
+          </div>
+          <div class="bg-gradient-to-br from-orange-50 to-yellow-50 p-4 rounded-xl border border-orange-100">
+            <p class="text-gray-600 text-sm">Masih Mengerjakan</p>
+            <p id="multiplayer-proses" class="text-3xl font-bold text-orange-600">0</p>
+          </div>
+        </div>
+        <div id="guru-multiplayer-list" class="space-y-2 mb-4">
+          <div class="text-center text-gray-400">Belum ada peserta yang bergabung.</div>
+        </div>
+        <div class="flex gap-2">
+          <button id="btn-refresh-multiplayer" class="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-6 py-2 rounded-full font-semibold hover:opacity-90 transition-all">🔄 Update Status</button>
+          <button id="btn-send-notification" class="flex-1 bg-gradient-to-r from-indigo-500 to-blue-500 text-white px-6 py-2 rounded-full font-semibold hover:opacity-90 transition-all">📢 Broadcast Pesan</button>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <script>
+    // Dashboard Guru: Animasi Peserta
+    function tampilkanAnimasiPesertaGuru() {
+      const el = document.getElementById('guru-animasi-peserta');
+      if (!el) return;
+      const pesertaKey = 'daftarPesertaKuis';
+      let daftar = [];
+      try { daftar = JSON.parse(localStorage.getItem(pesertaKey)) || []; } catch(e) { daftar = []; }
+      // Karakter emoji sesuai urutan quiz
+      const karakterEmojis = ["👨", "👩", "🧑‍🦱", "👳", "🧔", "👩‍🦰", "🦹", "🦸"];
+      el.innerHTML = daftar.length === 0 ? '<div class="text-gray-400">Belum ada peserta yang menyelesaikan kuis.</div>' :
+        daftar.map((p, idx) => {
+          const emoji = karakterEmojis[p.karakter] || '❓';
+          return `<div class="flex flex-col items-center animate-bounce relative group" style="animation-duration:${1.5 + Math.random()}s">
+            <span style="font-size:3rem;">${emoji}</span>
+            <span class="font-bold mt-2">${p.nama}</span>
+            <span class="text-xs text-gray-500">Absen: ${p.absen}</span>
+            <button onclick="hapusPesertaKuis('${p.nama.replace(/'/g, '\'')}', '${p.absen}')" class='absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity' title='Hapus Peserta'>&times;</button>
+          </div>`;
+        }).join('');
+    // Fungsi hapus peserta dari localStorage (agar global)
+    window.hapusPesertaKuis = function(nama, absen) {
+      if(!confirm(`Hapus peserta ${nama} (Absen: ${absen})?`)) return;
+      const pesertaKey = 'daftarPesertaKuis';
+      let daftar = [];
+      try { daftar = JSON.parse(localStorage.getItem(pesertaKey)) || []; } catch(e) { daftar = []; }
+      const baru = daftar.filter(p => !(p.nama === nama && p.absen === absen));
+      localStorage.setItem(pesertaKey, JSON.stringify(baru));
+      tampilkanAnimasiPesertaGuru();
+    }
+    }
+    // Tampilkan animasi peserta setiap kali dashboard guru dibuka
+    document.addEventListener('DOMContentLoaded', () => {
+      const navBtns = document.querySelectorAll('.nav-btn[data-section]');
+      navBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          if (this.getAttribute('data-section') === 'dashboard-guru') {
+            setTimeout(() => {
+              tampilkanAnimasiPesertaGuru();
+              tampilkanAnimasiBalapanGuru();
+            }, 200);
+            // Update status mulai kuis
+            updateStatusMulaiKuisGuru();
+          }
+        });
+      });
+
+      // Tambahkan event handler untuk tombol Mulai & Akhiri Kuis
+      const btnMulaiKuisGuru = document.getElementById('btn-mulai-kuis-guru');
+      if (btnMulaiKuisGuru) {
+        btnMulaiKuisGuru.addEventListener('click', function() {
+          localStorage.setItem('kuisSudahDimulai', 'true');
+          localStorage.removeItem('kuisSudahBerakhir');
+          updateStatusMulaiKuisGuru();
+        });
+      }
+      const btnAkhiriKuisGuru = document.getElementById('btn-akhiri-kuis-guru');
+      if (btnAkhiriKuisGuru) {
+        btnAkhiriKuisGuru.addEventListener('click', function() {
+          localStorage.removeItem('kuisSudahDimulai');
+          localStorage.setItem('kuisSudahBerakhir', 'true');
+          updateStatusMulaiKuisGuru();
+        });
+      }
+
+      // Status tampilan Mulai/Akhiri Kuis
+      function updateStatusMulaiKuisGuru() {
+        const statusSpan = document.getElementById('status-mulai-kuis-guru');
+        if (!statusSpan) return;
+        if (localStorage.getItem('kuisSudahBerakhir') === 'true') {
+          statusSpan.textContent = 'Kuis sudah diakhiri!';
+          statusSpan.classList.remove('text-gray-500', 'text-green-600', 'font-bold');
+          statusSpan.classList.add('text-red-600', 'font-bold');
+          tampilkanAnimasiBalapanGuru();
+          tampilkanLeaderboardRealtime();
+          tampilkanRankingSiswa();
+          tampilkanStatusMultiplayer();
+        } else if (localStorage.getItem('kuisSudahDimulai') === 'true') {
+          statusSpan.textContent = 'Kuis sudah dimulai!';
+          statusSpan.classList.remove('text-gray-500', 'text-red-600');
+          statusSpan.classList.add('text-green-600', 'font-bold');
+          tampilkanAnimasiBalapanGuru();
+          tampilkanStatusMultiplayer();
+        } else {
+          statusSpan.textContent = 'Kuis belum dimulai.';
+          statusSpan.classList.remove('text-green-600', 'font-bold', 'text-red-600');
+          statusSpan.classList.add('text-gray-500');
+        }
+      }
+
+      // ===== LEADERBOARD REALTIME =====
+      window.autoRefreshLeaderboard = false;
+      window.autoRefreshInterval = null;
+
+      function tampilkanLeaderboardRealtime() {
+        const el = document.getElementById('guru-leaderboard');
+        if (!el) return;
+        const scoresKey = 'kuisScores';
+        let scores = [];
+        try { scores = JSON.parse(localStorage.getItem(scoresKey)) || []; } catch(e) { scores = []; }
+        
+        // Sort by score descending, then by time
+        scores.sort((a, b) => b.score - a.score || new Date(a.time) - new Date(b.time));
+        
+        if (scores.length === 0) {
+          el.innerHTML = '<div class="text-center text-gray-400">Belum ada peserta yang menyelesaikan kuis.</div>';
+          return;
+        }
+        
+        let html = '<div class="overflow-x-auto"><table class="w-full text-sm">';
+        html += '<thead class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white"><tr><th class="p-3 text-left">Ranking</th><th class="p-3 text-left">Nama</th><th class="p-3 text-center">Absen</th><th class="p-3 text-center">Skor</th><th class="p-3 text-center">%</th><th class="p-3 text-center">Waktu</th></tr></thead>';
+        html += '<tbody>';
+        scores.forEach((score, idx) => {
+          const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx+1}`;
+          const percent = Math.round((score.score / 10) * 100);
+          const time = new Date(score.time).toLocaleTimeString('id-ID');
+          const rowColor = idx === 0 ? 'bg-yellow-50' : idx === 1 ? 'bg-gray-50' : idx === 2 ? 'bg-orange-50' : '';
+          html += `<tr class="${rowColor} border-b border-gray-200">
+            <td class="p-3 font-bold text-lg">${medal}</td>
+            <td class="p-3 font-semibold text-gray-800">${score.nama}</td>
+            <td class="p-3 text-center text-gray-600">${score.absen}</td>
+            <td class="p-3 text-center font-bold text-emerald-600">${score.score}</td>
+            <td class="p-3 text-center font-bold text-blue-600">${percent}%</td>
+            <td class="p-3 text-center text-gray-600 text-xs">${time}</td>
+          </tr>`;
+        });
+        html += '</tbody></table></div>';
+        el.innerHTML = html;
+      }
+
+      // ===== RANKING SISWA =====
+      function tampilkanRankingSiswa() {
+        const el = document.getElementById('guru-ranking');
+        if (!el) return;
+        const scoresKey = 'kuisScores';
+        let scores = [];
+        try { scores = JSON.parse(localStorage.getItem(scoresKey)) || []; } catch(e) { scores = []; }
+        
+        scores.sort((a, b) => b.score - a.score || new Date(a.time) - new Date(b.time));
+        
+        if (scores.length === 0) {
+          el.innerHTML = '<div class="text-center text-gray-400">Belum ada data ranking.</div>';
+          return;
+        }
+        
+        let html = '';
+        scores.forEach((score, idx) => {
+          const medal = idx === 0 ? '🥇 JUARA' : idx === 1 ? '🥈 RUNNER UP' : idx === 2 ? '🥉 BRONZE' : `#${idx+1}`;
+          const percent = Math.round((score.score / 10) * 100);
+          const gradients = ['from-yellow-400 to-yellow-200', 'from-gray-400 to-gray-200', 'from-orange-400 to-orange-200'];
+          const gradient = gradients[idx] || 'from-blue-200 to-blue-100';
+          const rankClass = `bg-gradient-to-r ${gradient}`;
+          
+          html += `
+          <div class="flex items-center gap-4 p-4 rounded-xl border-2 border-gray-200 ${rankClass}">
+            <div class="text-4xl w-16 text-center">${['🥇', '🥈', '🥉'][idx] || '📊'}</div>
+            <div class="flex-1">
+              <p class="font-bold text-lg text-gray-800">${score.nama}</p>
+              <p class="text-sm text-gray-600">No Absen: ${score.absen}</p>
+            </div>
+            <div class="text-right">
+              <p class="text-3xl font-bold text-emerald-600">${score.score}/10</p>
+              <p class="text-sm font-semibold text-blue-600">${percent}%</p>
+              <p class="text-xs text-gray-500">${medal}</p>
+            </div>
+          </div>`;
+        });
+        el.innerHTML = html;
+      }
+
+      // ===== MULTIPLAYER QUIZ STATUS =====
+      function tampilkanStatusMultiplayer() {
+        const pesertaKey = 'daftarPesertaKuis';
+        const scoresKey = 'kuisScores';
+        let peserta = [];
+        let scores = [];
+        try { peserta = JSON.parse(localStorage.getItem(pesertaKey)) || []; } catch(e) { peserta = []; }
+        try { scores = JSON.parse(localStorage.getItem(scoresKey)) || []; } catch(e) { scores = []; }
+        
+        const totalPeserta = peserta.length;
+        const selesai = scores.length;
+        const proses = totalPeserta - selesai;
+        
+        document.getElementById('multiplayer-total-peserta').textContent = totalPeserta;
+        document.getElementById('multiplayer-selesai').textContent = selesai;
+        document.getElementById('multiplayer-proses').textContent = proses;
+        
+        // List of participants
+        const el = document.getElementById('guru-multiplayer-list');
+        if (!el) return;
+        
+        if (peserta.length === 0) {
+          el.innerHTML = '<div class="text-center text-gray-400">Belum ada peserta yang bergabung.</div>';
+          return;
+        }
+        
+        let html = '';
+        peserta.forEach(p => {
+          const sudahSelesai = scores.some(s => s.nama === p.nama && s.absen === p.absen);
+          const status = sudahSelesai ? '✅ Selesai' : '⏳ Mengerjakan';
+          const statusColor = sudahSelesai ? 'text-green-600 bg-green-50' : 'text-orange-600 bg-orange-50';
+          const score = scores.find(s => s.nama === p.nama && s.absen === p.absen);
+          const scoreText = sudahSelesai ? `${score.score}/10 (${Math.round((score.score/10)*100)}%)` : '-';
+          
+          html += `
+          <div class="flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-gray-50">
+            <div class="flex-1">
+              <p class="font-semibold text-gray-800">${p.nama}</p>
+              <p class="text-xs text-gray-500">Absen: ${p.absen}</p>
+            </div>
+            <div class="text-right">
+              <p class="text-sm font-semibold ${statusColor} px-2 py-1 rounded">${status}</p>
+              <p class="text-xs text-gray-600 mt-1">${scoreText}</p>
+            </div>
+          </div>`;
+        });
+        el.innerHTML = html;
+      }
+
+      // ===== ANIMASI BALAPAN REALTIME =====
+      window.autoRefreshBalapan = false;
+      window.autoRefreshBalapanInterval = null;
+
+      function tampilkanAnimasiBalapanGuru() {
+        const el = document.getElementById('guru-animasi-balapan');
+        if (!el) return;
+        const karakterEmojis = ['👨','👩','🧑\u200d🦱','👳','🧔','👩\u200d🦰','🦹','🦸'];
+        const karakterNama = ['Andi','Sinta','Rafa','Hendra','Budi','Dina','Supra','Sary'];
+
+        // Ambil data peserta
+        let peserta = [];
+        try { peserta = JSON.parse(localStorage.getItem('daftarPesertaKuis')) || []; } catch(e) { peserta = []; }
+
+        // Ambil data progress realtime
+        let allProgress = {};
+        try { allProgress = JSON.parse(localStorage.getItem('kuisProgress')) || {}; } catch(e) { allProgress = {}; }
+
+        // Ambil data skor selesai
+        let scores = [];
+        try { scores = JSON.parse(localStorage.getItem('kuisScores')) || []; } catch(e) { scores = []; }
+
+        if (peserta.length === 0) {
+          el.innerHTML = '<div class="text-center text-gray-400">Belum ada peserta yang bergabung.</div>';
+          return;
+        }
+
+        // Urutkan peserta berdasarkan progress tertinggi
+        const pesertaDenganData = peserta.map(p => {
+          const key = p.nama + '__' + p.absen;
+          const prog = allProgress[key];
+          const skor = scores.find(s => s.nama === p.nama && s.absen === p.absen);
+          const benar = prog ? prog.benar : (skor ? skor.score : 0);
+          const soal = prog ? prog.soal : (skor ? 10 : 0);
+          const selesai = (prog && prog.selesai) || !!skor;
+          const karakter = (prog && prog.karakter >= 0) ? prog.karakter : (p.karakter >= 0 ? p.karakter : 0);
+          return { ...p, benar, soal, selesai, karakter };
+        });
+        pesertaDenganData.sort((a, b) => b.benar - a.benar || b.soal - a.soal);
+
+        let html = '';
+        pesertaDenganData.forEach((p, idx) => {
+          const pct = Math.round((p.benar / 10) * 100);
+          const emoji = karakterEmojis[p.karakter] || '🏃';
+          const charNama = karakterNama[p.karakter] || '';
+          const statusLabel = p.selesai
+            ? `<span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-1 rounded-full">✅ Selesai (${p.benar}/10)</span>`
+            : `<span class="bg-orange-100 text-orange-700 text-xs font-bold px-2 py-1 rounded-full">⏳ Soal ${p.soal}/10</span>`;
+          const rankBadge = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `<span class="text-gray-500 font-bold">#${idx+1}</span>`;
+          // Posisi karakter: clamp antara 0 dan 88% agar tidak keluar trek
+          const posLeft = Math.min(pct * 0.88, 88);
+          // Warna trek berdasar ranking
+          const trackColors = [
+            'from-yellow-300 to-green-300',
+            'from-gray-300 to-green-200',
+            'from-orange-300 to-green-200',
+          ];
+          const trackColor = trackColors[idx] || 'from-green-200 to-teal-200';
+
+          html += `
+          <div class="rounded-2xl border-2 ${p.selesai ? 'border-emerald-400' : 'border-gray-200'} p-4 bg-gradient-to-r from-gray-50 to-white">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-xl">${rankBadge}</span>
+                <span class="font-bold text-gray-800">${p.nama}</span>
+                <span class="text-xs text-gray-500">(Absen: ${p.absen})</span>
+              </div>
+              <div class="flex items-center gap-2">${statusLabel}<span class="font-bold text-blue-600 text-sm">${pct}%</span></div>
+            </div>
+            <div class="relative h-14 rounded-xl overflow-hidden border-2 border-gray-300 bg-gradient-to-r ${trackColor}">
+              <!-- Garis finish -->
+              <div class="absolute right-0 top-0 bottom-0 w-1" style="background:repeating-linear-gradient(180deg,#000 0,#000 6px,#fff 6px,#fff 12px)"></div>
+              <!-- Flag finish -->
+              <div class="absolute right-2 top-1 text-xs">🏁</div>
+              <!-- Karakter pembalap -->
+              <div class="absolute top-1/2 -translate-y-1/2 text-3xl transition-all duration-700 ease-out" style="left:${posLeft}%">${emoji}</div>
+              <!-- Label nama karakter -->
+              <div class="absolute bottom-0.5 text-xs text-gray-700 font-semibold transition-all duration-700" style="left:calc(${posLeft}% + 2px)">${charNama || p.nama.split(' ')[0]}</div>
+            </div>
+            <!-- Progress bar teks -->
+            <div class="mt-1 h-1.5 rounded-full bg-gray-200 overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-700 ${p.selesai ? 'bg-emerald-500' : 'bg-orange-400'}" style="width:${pct}%"></div>
+            </div>
+          </div>`;
+        });
+        el.innerHTML = html;
+      }
+
+      document.getElementById('btn-refresh-balapan')?.addEventListener('click', tampilkanAnimasiBalapanGuru);
+
+      document.getElementById('btn-auto-refresh-balapan')?.addEventListener('click', function() {
+        window.autoRefreshBalapan = !window.autoRefreshBalapan;
+        if (window.autoRefreshBalapan) {
+          this.textContent = '⏸ Stop Live';
+          this.classList.remove('from-orange-500','to-amber-500');
+          this.classList.add('from-red-500','to-rose-500');
+          window.autoRefreshBalapanInterval = setInterval(tampilkanAnimasiBalapanGuru, 1500);
+          tampilkanAnimasiBalapanGuru();
+        } else {
+          this.textContent = '▶ Live (Auto)';
+          this.classList.remove('from-red-500','to-rose-500');
+          this.classList.add('from-orange-500','to-amber-500');
+          clearInterval(window.autoRefreshBalapanInterval);
+        }
+      });
+
+      document.getElementById('btn-reset-progress')?.addEventListener('click', function() {
+        if (confirm('Hapus semua data progress balapan? (Data skor tidak akan terhapus)')) {
+          localStorage.removeItem('kuisProgress');
+          tampilkanAnimasiBalapanGuru();
+        }
+      });
+
+      // Event listeners for buttons
+      document.getElementById('btn-refresh-leaderboard')?.addEventListener('click', tampilkanLeaderboardRealtime);
+      document.getElementById('btn-refresh-ranking')?.addEventListener('click', tampilkanRankingSiswa);
+      document.getElementById('btn-refresh-multiplayer')?.addEventListener('click', tampilkanStatusMultiplayer);
+      
+      document.getElementById('btn-auto-refresh-leaderboard')?.addEventListener('click', function() {
+        window.autoRefreshLeaderboard = !window.autoRefreshLeaderboard;
+        if (window.autoRefreshLeaderboard) {
+          this.textContent = '⏸ Stop Auto Refresh';
+          this.classList.remove('from-green-500', 'to-emerald-500');
+          this.classList.add('from-red-500', 'to-rose-500');
+          window.autoRefreshInterval = setInterval(tampilkanLeaderboardRealtime, 2000);
+          tampilkanLeaderboardRealtime();
+        } else {
+          this.textContent = '▶ Auto Refresh';
+          this.classList.remove('from-red-500', 'to-rose-500');
+          this.classList.add('from-green-500', 'to-emerald-500');
+          clearInterval(window.autoRefreshInterval);
+        }
+      });
+
+      document.getElementById('btn-clear-scores')?.addEventListener('click', function() {
+        if (confirm('Apakah Anda yakin ingin menghapus semua skor? Tindakan ini tidak dapat dibatalkan!')) {
+          localStorage.removeItem('kuisScores');
+          tampilkanRankingSiswa();
+          tampilkanLeaderboardRealtime();
+          tampilkanStatusMultiplayer();
+          alert('Semua skor telah dihapus!');
+        }
+      });
+
+      document.getElementById('btn-export-ranking')?.addEventListener('click', function() {
+        const scoresKey = 'kuisScores';
+        let scores = [];
+        try { scores = JSON.parse(localStorage.getItem(scoresKey)) || []; } catch(e) { scores = []; }
+        
+        scores.sort((a, b) => b.score - a.score || new Date(a.time) - new Date(b.time));
+        
+        if (scores.length === 0) {
+          alert('Tidak ada data ranking untuk diekspor!');
+          return;
+        }
+        
+        let csv = 'Ranking,Nama,No Absen,Skor,Persentase,Waktu\n';
+        scores.forEach((score, idx) => {
+          const percent = Math.round((score.score / 10) * 100);
+          const time = new Date(score.time).toLocaleString('id-ID');
+          csv += `${idx+1},"${score.nama}",${score.absen},${score.score},${percent}%,"${time}"\n`;
+        });
+        
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `Ranking-Kuis-${new Date().toLocaleDateString('id-ID')}.csv`;
+        link.click();
+      });
+
+      document.getElementById('btn-send-notification')?.addEventListener('click', function() {
+        const message = prompt('Masukkan pesan yang ingin dikirim ke semua peserta:');
+        if (message) {
+          localStorage.setItem('guruBroadcastMessage', message);
+          localStorage.setItem('guruBroadcastTime', new Date().toISOString());
+          alert(`Pesan terkirim: "${message}"`);
+        }
+      });
+    });
+    </script>
+    <section id="beranda" class="section-content">
+     <div class="text-center mb-12">
+    <div class="inline-block p-3 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-3xl shadow-2xl glow-animation mb-6">
+  <img src="download (2).jpg" 
+       alt="Icon Beranda" 
+       class="w-48 h-48 object-cover rounded-2xl shadow-lg" />
+</div>
+
+<h2 class="text-4xl font-extrabold text-gray-800 mb-4">
+  Media Pembelajaran Interaktif IPS Deep Learning Integrasi Musik 👋
+</h2>
+
+<p class="text-xl text-gray-600 max-w-2xl mx-auto">
+  Mari belajar tentang kekayaan alam Indonesia dan bagaimana kita bisa menjaga dan memanfaatkannya dengan bijak!
+</p>
+     <div class="grid md:grid-cols-3 gap-6 mb-12">
+      <div class="bg-white rounded-2xl p-6 shadow-lg card-sda border-l-4 border-emerald-500">
+       <div class="text-4xl mb-4">
+        🎯
+       </div>
+       <h3 class="text-xl font-bold text-gray-800 mb-2">Tujuan Pembelajaran</h3>
+       <p class="text-gray-600">Memahami konsep SDA, jenis-jenisnya, dan cara pengelolaannya secara berkelanjutan.</p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-lg card-sda border-l-4 border-teal-500">
+       <div class="text-4xl mb-4">
+        ⏱️
+       </div>
+       <h3 class="text-xl font-bold text-gray-800 mb-2">Waktu Belajar</h3>
+       <p class="text-gray-600">Estimasi 45-60 menit untuk mempelajari seluruh materi dan mengerjakan kuis.</p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-lg card-sda border-l-4 border-cyan-500">
+       <div class="text-4xl mb-4">
+        📊
+       </div>
+       <h3 class="text-xl font-bold text-gray-800 mb-2">Capaian</h3>
+       <p class="text-gray-600">Selesaikan materi dan raih nilai minimal 70 pada kuis untuk menguasai materi ini.</p>
+      </div>
+     </div>
+     <div class="bg-gradient-to-r from-emerald-500 to-teal-500 rounded-3xl p-8 text-white text-center">
+      <h3 class="text-2xl font-bold mb-4">🚀 Siap Memulai Petualangan?</h3>
+      <p class="mb-6 text-emerald-100">Klik tombol di bawah untuk mulai mempelajari materi!</p><button onclick="showSection('materi')" class="bg-white text-emerald-600 px-8 py-3 rounded-full font-bold text-lg hover:bg-emerald-50 transition-all transform hover:scale-105 shadow-lg"> Mulai Belajar → </button>
+     </div>
+    </section><!-- Materi Section -->
+    <section id="materi" class="section-content hidden">
+     <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+      <div class="bg-gradient-to-r from-emerald-500 to-teal-500 p-6">
+       <h2 class="text-2xl font-bold text-white flex items-center gap-3">📚 Pengertian Sumber Daya Alam</h2>
+      </div>
+      <div class="p-8">
+       <div class="prose max-w-none">
+        <div class="bg-emerald-50 border-l-4 border-emerald-500 p-6 rounded-r-xl mb-8">
+         <p class="text-lg text-gray-700 leading-relaxed"><strong class="text-emerald-700">Sumber Daya Alam (SDA)</strong> adalah segala sesuatu yang berasal dari alam yang dapat dimanfaatkan untuk memenuhi kebutuhan hidup manusia. SDA mencakup komponen biotik (makhluk hidup) dan abiotik (benda mati) yang ada di bumi.</p>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center text-sm">1</span> Karakteristik SDA Indonesia</h3>
+        <div class="grid md:grid-cols-2 gap-4 mb-8">
+         <div class="bg-gradient-to-br from-blue-50 to-cyan-50 p-5 rounded-xl border border-blue-100">
+          <div class="text-3xl mb-2">
+           🏝️
+          </div>
+          <h4 class="font-bold text-blue-800">Negara Kepulauan</h4>
+          <p class="text-gray-600 text-sm">17.000+ pulau dengan keanekaragaman hayati tinggi</p>
+         </div>
+         <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-5 rounded-xl border border-green-100">
+          <div class="text-3xl mb-2">
+           🌴
+          </div>
+          <h4 class="font-bold text-green-800">Iklim Tropis</h4>
+          <p class="text-gray-600 text-sm">Mendukung pertumbuhan berbagai jenis flora dan fauna</p>
+         </div>
+         <div class="bg-gradient-to-br from-amber-50 to-yellow-50 p-5 rounded-xl border border-amber-100">
+          <div class="text-3xl mb-2">
+           ⛏️
+          </div>
+          <h4 class="font-bold text-amber-800">Kaya Mineral</h4>
+          <p class="text-gray-600 text-sm">Mengandung berbagai jenis tambang dan mineral berharga</p>
+         </div>
+         <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-5 rounded-xl border border-purple-100">
+          <div class="text-3xl mb-2">
+           🌊
+          </div>
+          <h4 class="font-bold text-purple-800">Perairan Luas</h4>
+          <p class="text-gray-600 text-sm">2/3 wilayah Indonesia adalah lautan</p>
+         </div>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center text-sm">2</span> Manfaat Sumber Daya Alam</h3>
+        <div class="space-y-3 mb-8">
+         <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl"><span class="text-2xl">🍚</span>
+          <div>
+           <h4 class="font-bold text-gray-800">Sumber Pangan</h4>
+           <p class="text-gray-600 text-sm">Menyediakan bahan makanan dari pertanian, peternakan, dan perikanan</p>
+          </div>
+         </div>
+         <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl"><span class="text-2xl">⚡</span>
+          <div>
+           <h4 class="font-bold text-gray-800">Sumber Energi</h4>
+           <p class="text-gray-600 text-sm">Menghasilkan listrik dari air, panas bumi, matahari, dan bahan bakar fosil</p>
+          </div>
+         </div>
+         <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl"><span class="text-2xl">🏭</span>
+          <div>
+           <h4 class="font-bold text-gray-800">Bahan Industri</h4>
+           <p class="text-gray-600 text-sm">Menjadi bahan baku untuk berbagai produk industri</p>
+          </div>
+         </div>
+         <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl"><span class="text-2xl">💰</span>
+          <div>
+           <h4 class="font-bold text-gray-800">Sumber Pendapatan</h4>
+           <p class="text-gray-600 text-sm">Menjadi komoditas ekspor dan sumber devisa negara</p>
+          </div>
+         </div>
+        </div>
+        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
+         <h4 class="font-bold text-yellow-800 flex items-center gap-2 mb-2">💡 Tahukah Kamu?</h4>
+         <p class="text-gray-700">Indonesia memiliki 10-15% spesies tumbuhan dunia, 12% spesies mamalia, 17% spesies burung, dan 25% spesies ikan! Kita adalah salah satu negara dengan keanekaragaman hayati tertinggi di dunia (megabiodiversity country).</p>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="mt-6 flex justify-end"><button onclick="showSection('jenis')" class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-full font-bold hover:opacity-90 transition-all transform hover:scale-105 shadow-lg"> Lanjut: Jenis SDA → </button>
+     </div>
+    </section><!-- Jenis SDA Section -->
+    <section id="jenis" class="section-content hidden">
+     <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">🌿 Jenis-Jenis Sumber Daya Alam</h2><!-- Tabs for SDA Types -->
+     <div class="flex flex-wrap justify-center gap-3 mb-8"><button onclick="showSDATab('hayati')" class="sda-tab active bg-emerald-500 text-white px-6 py-2 rounded-full font-semibold transition-all" data-tab="hayati"> 🌱 SDA Hayati </button> <button onclick="showSDATab('nonhayati')" class="sda-tab bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-semibold transition-all" data-tab="nonhayati"> ⛰️ SDA Non-Hayati </button> <button onclick="showSDATab('terbarukan')" class="sda-tab bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-semibold transition-all" data-tab="terbarukan"> ♻️ SDA Terbarukan </button> <button onclick="showSDATab('takTerbarukan')" class="sda-tab bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-semibold transition-all" data-tab="takTerbarukan"> ⛽ SDA Tak Terbarukan </button>
+     </div><!-- SDA Hayati -->
+     <div id="tab-hayati" class="sda-content">
+      <div class="bg-white rounded-3xl shadow-xl p-8">
+       <div class="flex items-center gap-4 mb-6">
+        <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center"><span class="text-3xl">🌱</span>
+        </div>
+        <div>
+         <h3 class="text-2xl font-bold text-gray-800">Sumber Daya Alam Hayati</h3>
+         <p class="text-gray-600">Berasal dari makhluk hidup (biotik)</p>
+        </div>
+       </div>
+       <div class="grid md:grid-cols-2 gap-6">
+        <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-100">
+         <h4 class="font-bold text-green-800 text-lg mb-4 flex items-center gap-2">🌳 Flora (Tumbuhan)</h4>
+         <ul class="space-y-2 text-gray-700">
+          <li class="flex items-center gap-2"><span class="text-green-500">•</span> Hutan hujan tropis</li>
+          <li class="flex items-center gap-2"><span class="text-green-500">•</span> Tanaman pangan (padi, jagung)</li>
+          <li class="flex items-center gap-2"><span class="text-green-500">•</span> Tanaman perkebunan (kelapa sawit, karet)</li>
+          <li class="flex items-center gap-2"><span class="text-green-500">•</span> Tanaman obat-obatan</li>
+          <li class="flex items-center gap-2"><span class="text-green-500">•</span> Kayu dan hasil hutan</li>
+         </ul>
+        </div>
+        <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-2xl border border-amber-100">
+         <h4 class="font-bold text-amber-800 text-lg mb-4 flex items-center gap-2">🦁 Fauna (Hewan)</h4>
+         <ul class="space-y-2 text-gray-700">
+          <li class="flex items-center gap-2"><span class="text-amber-500">•</span> Ternak (sapi, kambing, ayam)</li>
+          <li class="flex items-center gap-2"><span class="text-amber-500">•</span> Ikan dan hasil laut</li>
+          <li class="flex items-center gap-2"><span class="text-amber-500">•</span> Satwa liar (orangutan, komodo)</li>
+          <li class="flex items-center gap-2"><span class="text-amber-500">•</span> Serangga penyerbuk</li>
+          <li class="flex items-center gap-2"><span class="text-amber-500">•</span> Mikroorganisme bermanfaat</li>
+         </ul>
+        </div>
+       </div>
+      </div>
+     </div><!-- SDA Non-Hayati -->
+     <div id="tab-nonhayati" class="sda-content hidden">
+      <div class="bg-white rounded-3xl shadow-xl p-8">
+       <div class="flex items-center gap-4 mb-6">
+        <div class="w-16 h-16 bg-gradient-to-br from-slate-400 to-gray-500 rounded-2xl flex items-center justify-center"><span class="text-3xl">⛰️</span>
+        </div>
+        <div>
+         <h3 class="text-2xl font-bold text-gray-800">Sumber Daya Alam Non-Hayati</h3>
+         <p class="text-gray-600">Berasal dari benda mati (abiotik)</p>
+        </div>
+       </div>
+       <div class="grid md:grid-cols-3 gap-4">
+        <div class="bg-gradient-to-br from-blue-50 to-cyan-50 p-5 rounded-2xl border border-blue-100 card-sda">
+         <div class="text-3xl mb-3">
+          💧
+         </div>
+         <h4 class="font-bold text-blue-800">Air</h4>
+         <p class="text-gray-600 text-sm">Sungai, danau, air tanah, dan lautan</p>
+        </div>
+        <div class="bg-gradient-to-br from-amber-50 to-yellow-50 p-5 rounded-2xl border border-amber-100 card-sda">
+         <div class="text-3xl mb-3">
+          🌍
+         </div>
+         <h4 class="font-bold text-amber-800">Tanah</h4>
+         <p class="text-gray-600 text-sm">Media tanam dan bahan bangunan</p>
+        </div>
+        <div class="bg-gradient-to-br from-orange-50 to-red-50 p-5 rounded-2xl border border-orange-100 card-sda">
+         <div class="text-3xl mb-3">
+          ☀️
+         </div>
+         <h4 class="font-bold text-orange-800">Matahari</h4>
+         <p class="text-gray-600 text-sm">Sumber energi dan cahaya</p>
+        </div>
+        <div class="bg-gradient-to-br from-cyan-50 to-blue-50 p-5 rounded-2xl border border-cyan-100 card-sda">
+         <div class="text-3xl mb-3">
+          💨
+         </div>
+         <h4 class="font-bold text-cyan-800">Udara</h4>
+         <p class="text-gray-600 text-sm">Oksigen dan angin</p>
+        </div>
+        <div class="bg-gradient-to-br from-stone-100 to-gray-100 p-5 rounded-2xl border border-stone-200 card-sda">
+         <div class="text-3xl mb-3">
+          💎
+         </div>
+         <h4 class="font-bold text-stone-700">Mineral</h4>
+         <p class="text-gray-600 text-sm">Emas, perak, tembaga, nikel</p>
+        </div>
+        <div class="bg-gradient-to-br from-zinc-100 to-slate-100 p-5 rounded-2xl border border-zinc-200 card-sda">
+         <div class="text-3xl mb-3">
+          🪨
+         </div>
+         <h4 class="font-bold text-zinc-700">Batuan</h4>
+         <p class="text-gray-600 text-sm">Granit, marmer, batu bara</p>
+        </div>
+       </div>
+      </div>
+     </div><!-- SDA Terbarukan -->
+     <div id="tab-terbarukan" class="sda-content hidden">
+      <div class="bg-white rounded-3xl shadow-xl p-8">
+       <div class="flex items-center gap-4 mb-6">
+        <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-teal-500 rounded-2xl flex items-center justify-center"><span class="text-3xl">♻️</span>
+        </div>
+        <div>
+         <h3 class="text-2xl font-bold text-gray-800">Sumber Daya Alam Terbarukan</h3>
+         <p class="text-gray-600">Dapat dipulihkan dan diperbaharui secara alami</p>
+        </div>
+       </div>
+       <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-xl mb-6">
+        <p class="text-gray-700"><strong>Definisi:</strong> SDA yang dapat diperbaharui dalam waktu relatif singkat melalui proses alami atau budidaya manusia.</p>
+       </div>
+       <div class="grid md:grid-cols-2 gap-4">
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl"><span class="text-3xl">🌲</span>
+         <div>
+          <h4 class="font-bold text-green-800">Hutan</h4>
+          <p class="text-gray-600 text-sm">Dapat ditanam kembali melalui reboisasi</p>
+         </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl"><span class="text-3xl">💧</span>
+         <div>
+          <h4 class="font-bold text-blue-800">Air</h4>
+          <p class="text-gray-600 text-sm">Diperbaharui melalui siklus hidrologi</p>
+         </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl"><span class="text-3xl">🐟</span>
+         <div>
+          <h4 class="font-bold text-amber-800">Ikan</h4>
+          <p class="text-gray-600 text-sm">Berkembang biak secara alami</p>
+         </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl"><span class="text-3xl">☀️</span>
+         <div>
+          <h4 class="font-bold text-orange-800">Energi Surya</h4>
+          <p class="text-gray-600 text-sm">Tersedia setiap hari tanpa habis</p>
+         </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-xl"><span class="text-3xl">💨</span>
+         <div>
+          <h4 class="font-bold text-cyan-800">Angin</h4>
+          <p class="text-gray-600 text-sm">Selalu tersedia di alam</p>
+         </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-red-50 to-orange-50 rounded-xl"><span class="text-3xl">🌋</span>
+         <div>
+          <h4 class="font-bold text-red-800">Panas Bumi</h4>
+          <p class="text-gray-600 text-sm">Energi dari dalam bumi yang terus ada</p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- SDA Tak Terbarukan -->
+     <div id="tab-takTerbarukan" class="sda-content hidden">
+      <div class="bg-white rounded-3xl shadow-xl p-8">
+       <div class="flex items-center gap-4 mb-6">
+        <div class="w-16 h-16 bg-gradient-to-br from-gray-600 to-slate-700 rounded-2xl flex items-center justify-center"><span class="text-3xl">⛽</span>
+        </div>
+        <div>
+         <h3 class="text-2xl font-bold text-gray-800">Sumber Daya Alam Tak Terbarukan</h3>
+         <p class="text-gray-600">Terbatas dan tidak dapat diperbaharui</p>
+        </div>
+       </div>
+       <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-xl mb-6">
+        <p class="text-gray-700"><strong>Definisi:</strong> SDA yang pembentukannya membutuhkan waktu jutaan tahun sehingga jika habis tidak dapat diperbaharui dalam waktu singkat.</p>
+       </div>
+       <div class="space-y-4">
+        <div class="bg-gradient-to-r from-gray-800 to-gray-900 p-6 rounded-2xl text-white">
+         <div class="flex items-center gap-4 mb-3"><span class="text-4xl">🛢️</span>
+          <div>
+           <h4 class="font-bold text-xl">Minyak Bumi</h4>
+           <p class="text-gray-300 text-sm">Bahan bakar kendaraan dan industri</p>
+          </div>
+         </div>
+         <div class="bg-white/10 rounded-lg p-3 text-sm">
+          <p>Indonesia pernah menjadi anggota OPEC (Organisasi Negara Pengekspor Minyak)</p>
+         </div>
+        </div>
+        <div class="bg-gradient-to-r from-slate-700 to-slate-800 p-6 rounded-2xl text-white">
+         <div class="flex items-center gap-4 mb-3"><span class="text-4xl">⚫</span>
+          <div>
+           <h4 class="font-bold text-xl">Batu Bara</h4>
+           <p class="text-gray-300 text-sm">Pembangkit listrik dan industri</p>
+          </div>
+         </div>
+         <div class="bg-white/10 rounded-lg p-3 text-sm">
+          <p>Indonesia adalah eksportir batu bara terbesar di dunia</p>
+         </div>
+        </div>
+        <div class="bg-gradient-to-r from-blue-800 to-blue-900 p-6 rounded-2xl text-white">
+         <div class="flex items-center gap-4 mb-3"><span class="text-4xl">🔵</span>
+          <div>
+           <h4 class="font-bold text-xl">Gas Alam</h4>
+           <p class="text-gray-300 text-sm">Bahan bakar rumah tangga dan industri</p>
+          </div>
+         </div>
+         <div class="bg-white/10 rounded-lg p-3 text-sm">
+          <p>LNG (Liquid Natural Gas) Indonesia diekspor ke berbagai negara</p>
+         </div>
+        </div>
+        <div class="grid md:grid-cols-3 gap-4 mt-6">
+         <div class="bg-gradient-to-br from-yellow-100 to-amber-100 p-4 rounded-xl border border-yellow-200 text-center"><span class="text-3xl">🥇</span>
+          <h4 class="font-bold text-amber-800 mt-2">Emas</h4>
+         </div>
+         <div class="bg-gradient-to-br from-gray-100 to-slate-100 p-4 rounded-xl border border-gray-200 text-center"><span class="text-3xl">🥈</span>
+          <h4 class="font-bold text-gray-700 mt-2">Perak</h4>
+         </div>
+         <div class="bg-gradient-to-br from-orange-100 to-amber-100 p-4 rounded-xl border border-orange-200 text-center"><span class="text-3xl">🔶</span>
+          <h4 class="font-bold text-orange-800 mt-2">Tembaga</h4>
+         </div>
+        </div>
+       </div>
+       <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+        <p class="text-gray-700 flex items-start gap-2"><span class="text-xl">⚠️</span> <span><strong>Perhatian:</strong> Karena tidak dapat diperbaharui, kita harus menggunakan SDA ini dengan bijak dan mulai beralih ke energi terbarukan!</span></p>
+       </div>
+      </div>
+     </div>
+     <div class="mt-6 flex justify-between"><button onclick="showSection('materi')" class="bg-gray-200 text-gray-700 px-6 py-3 rounded-full font-bold hover:bg-gray-300 transition-all"> ← Kembali </button> <button onclick="showSection('video')" class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-full font-bold hover:opacity-90 transition-all transform hover:scale-105 shadow-lg"> Lanjut: Video → </button>
+     </div>
+    </section><!-- Video Section -->
+    <section id="video" class="section-content hidden">
+     <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">🎬 Video Pembelajaran</h2>
+     <div class="bg-white rounded-3xl shadow-xl overflow-hidden mb-8 flex justify-center">
+      <video controls class="w-full max-w-3xl aspect-video bg-black rounded-2xl shadow-lg">
+        <source src="Pemanfaatan SDA.mp4" type="video/mp4">
+        Browser Anda tidak mendukung pemutar video HTML5.
+      </video>
+     </div>
+     <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-white rounded-2xl p-6 shadow-lg card-sda">
+       <div class="flex items-center gap-4 mb-4">
+        <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-green-500 rounded-xl flex items-center justify-center"><span class="text-2xl">📗</span>
+        </div>
+        <div>
+         <h4 class="font-bold text-gray-800">Poin Penting Video 1</h4>
+         <p class="text-sm text-gray-500">Pengelolaan SDA</p>
+        </div>
+       </div>
+       <ul class="space-y-2 text-gray-600">
+        <li class="flex items-start gap-2"><span class="text-emerald-500 mt-1">✓</span> <span>Prinsip pembangunan berkelanjutan</span></li>
+        <li class="flex items-start gap-2"><span class="text-emerald-500 mt-1">✓</span> <span>Peran pemerintah dalam pengelolaan SDA</span></li>
+        <li class="flex items-start gap-2"><span class="text-emerald-500 mt-1">✓</span> <span>Dampak eksploitasi berlebihan</span></li>
+       </ul>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-lg card-sda">
+       <div class="flex items-center gap-4 mb-4">
+        <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-xl flex items-center justify-center"><span class="text-2xl">📘</span>
+        </div>
+        <div>
+         <h4 class="font-bold text-gray-800">Poin Penting Video 2</h4>
+         <p class="text-sm text-gray-500">Konservasi SDA</p>
+        </div>
+       </div>
+       <ul class="space-y-2 text-gray-600">
+        <li class="flex items-start gap-2"><span class="text-blue-500 mt-1">✓</span> <span>Cara menjaga kelestarian alam</span></li>
+        <li class="flex items-start gap-2"><span class="text-blue-500 mt-1">✓</span> <span>Peran masyarakat dalam konservasi</span></li>
+        <li class="flex items-start gap-2"><span class="text-blue-500 mt-1">✓</span> <span>Contoh program konservasi di Indonesia</span></li>
+       </ul>
+      </div>
+     </div>
+     <div class="mt-8 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-3xl p-8 text-white text-center">
+      <h3 class="text-2xl font-bold mb-4">🎓 Siap Menguji Pemahamanmu?</h3>
+      <p class="mb-6 text-emerald-100">Kerjakan 10 soal pilihan ganda dan soal refleksi deskriptif untuk mengukur pemahamanmu!</p><button onclick="showSection('kuis')" class="bg-white text-emerald-600 px-8 py-3 rounded-full font-bold text-lg hover:bg-emerald-50 transition-all transform hover:scale-105 shadow-lg"> Mulai Kuis → </button>
+     </div>
+    </section><!-- Kuis Section - Racing Game -->
+    <section id="kuis" class="section-content hidden">
+     <div id="kuis-auth" class="bg-white rounded-3xl shadow-xl p-8 mb-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Masuk ke Kuis</h2>
+      <form id="form-kuis-auth" class="max-w-md mx-auto space-y-4">
+        <div>
+          <label for="kode-kuis" class="block font-semibold mb-1">Kode Kuis</label>
+          <input id="kode-kuis" type="text" class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-emerald-500 focus:outline-none" placeholder="Masukkan kode kuis" required />
+        </div>
+        <div>
+          <label for="nama-lengkap" class="block font-semibold mb-1">Nama Lengkap</label>
+          <input id="nama-lengkap" type="text" class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-emerald-500 focus:outline-none" placeholder="Masukkan nama lengkap" required />
+        </div>
+        <div>
+          <label for="no-absen" class="block font-semibold mb-1">No Absen</label>
+          <input id="no-absen" type="number" class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-emerald-500 focus:outline-none" placeholder="Masukkan nomor absen" required />
+        </div>
+        <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-full font-bold hover:opacity-90 transition-all shadow-lg">Masuk Kuis</button>
+        <div id="kuis-auth-error" class="text-red-600 text-sm mt-2 hidden text-center"></div>
+      </form>
+     </div>
+    <div id="waiting-room" class="bg-white rounded-3xl shadow-xl p-8 mb-8 text-center" style="display:none">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Menunggu Guru Memulai Kuis...</h2>
+      <p class="mb-4 text-gray-600">Silakan tunggu, kuis akan dimulai oleh guru. Berikut daftar peserta yang sudah masuk:</p>
+      <div id="waiting-list" class="max-w-md mx-auto mb-4"></div>
+      <div class="flex justify-center items-center gap-2 text-emerald-600 animate-pulse mb-2"><span class="w-3 h-3 bg-emerald-400 rounded-full"></span><span class="w-3 h-3 bg-emerald-400 rounded-full"></span><span class="w-3 h-3 bg-emerald-400 rounded-full"></span></div>
+      <p class="text-sm text-gray-500 mb-4">Sambil menunggu, silakan pilih karaktermu terlebih dahulu 👇</p>
+      <div id="waiting-character-info" class="min-h-8 mb-2"></div>
+      <div id="waiting-character-selection" class="mt-2"></div>
+    </div>
+    <div id="countdown-anim" class="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-90 z-50" style="display:none;">
+      <div id="countdown-number" class="text-7xl font-extrabold text-emerald-600 animate-bounce"></div>
+    </div>
+    <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center" id="kuis-title" style="display:none">🏃 Balap Lari Pengetahuan!</h2><!-- Character Selection Screen -->
+    <div id="character-selection" class="bg-white rounded-3xl shadow-xl p-8" style="display:none">
+      <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center">Pilih Karaktermu! 👤</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+       <div onclick="selectCharacter(0)" class="character-card bg-gradient-to-br from-blue-100 to-blue-50 p-6 rounded-2xl border-3 border-blue-200 cursor-pointer hover:scale-110 transition-transform text-center">
+        <div class="text-6xl mb-4">
+         👨
+        </div>
+        <p class="font-bold text-gray-800">Andi</p>
+       </div>
+       <div onclick="selectCharacter(1)" class="character-card bg-gradient-to-br from-pink-100 to-pink-50 p-6 rounded-2xl border-3 border-pink-200 cursor-pointer hover:scale-110 transition-transform text-center">
+        <div class="text-6xl mb-4">
+         👩
+        </div>
+        <p class="font-bold text-gray-800">Sinta</p>
+       </div>
+       <div onclick="selectCharacter(2)" class="character-card bg-gradient-to-br from-purple-100 to-purple-50 p-6 rounded-2xl border-3 border-purple-200 cursor-pointer hover:scale-110 transition-transform text-center">
+        <div class="text-6xl mb-4">
+         🧑‍🦱
+        </div>
+        <p class="font-bold text-gray-800">Rafa</p>
+       </div>
+       <div onclick="selectCharacter(3)" class="character-card bg-gradient-to-br from-yellow-100 to-yellow-50 p-6 rounded-2xl border-3 border-yellow-200 cursor-pointer hover:scale-110 transition-transform text-center">
+        <div class="text-6xl mb-4">
+         👳
+        </div>
+        <p class="font-bold text-gray-800">Hendra</p>
+       </div>
+       <div onclick="selectCharacter(4)" class="character-card bg-gradient-to-br from-green-100 to-green-50 p-6 rounded-2xl border-3 border-green-200 cursor-pointer hover:scale-110 transition-transform text-center">
+        <div class="text-6xl mb-4">
+         🧔
+        </div>
+        <p class="font-bold text-gray-800">Budi</p>
+       </div>
+       <div onclick="selectCharacter(5)" class="character-card bg-gradient-to-br from-red-100 to-red-50 p-6 rounded-2xl border-3 border-red-200 cursor-pointer hover:scale-110 transition-transform text-center">
+        <div class="text-6xl mb-4">
+         👩‍🦰
+        </div>
+        <p class="font-bold text-gray-800">Dina</p>
+       </div>
+       <div onclick="selectCharacter(6)" class="character-card bg-gradient-to-br from-cyan-100 to-cyan-50 p-6 rounded-2xl border-3 border-cyan-200 cursor-pointer hover:scale-110 transition-transform text-center">
+        <div class="text-6xl mb-4">
+         🦹
+        </div>
+        <p class="font-bold text-gray-800">Supra</p>
+       </div>
+       <div onclick="selectCharacter(7)" class="character-card bg-gradient-to-br from-orange-100 to-orange-50 p-6 rounded-2xl border-3 border-orange-200 cursor-pointer hover:scale-110 transition-transform text-center">
+        <div class="text-6xl mb-4">
+         🦸
+        </div>
+        <p class="font-bold text-gray-800">Sary</p>
+       </div>
+      </div>
+     </div><!-- Quiz Container -->
+     <div id="quiz-container" class="hidden"><!-- Progress -->
+      <div class="mb-6 bg-white rounded-2xl p-4 shadow-lg">
+       <div class="flex justify-between text-sm text-gray-600 mb-2"><span>Soal <span id="current-question">1</span> dari <span id="total-questions">11</span></span>
+       </div>
+       <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+        <div id="progress-bar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 progress-bar" style="width: 10%"></div>
+       </div>
+      </div><!-- Question -->
+      <div class="bg-white rounded-2xl p-6 shadow-lg mb-6">
+       <h3 id="question-text" class="text-xl font-bold text-gray-800 mb-4"></h3>
+      </div><!-- Racing Track -->
+      <div class="bg-white rounded-2xl p-6 shadow-lg mb-6">
+       <div class="track relative h-32 mb-6 border-4 border-gray-400 rounded-lg overflow-hidden">
+        <div class="finish-line"></div>
+        <div id="racer-position" class="racer absolute top-1/2 transform -translate-y-1/2 left-0" style="--distance: 0"></div>
+       </div>
+       <div class="flex justify-between text-center">
+        <div>
+         <p class="text-sm text-gray-600">Posisi Mu</p>
+         <p id="racer-distance" class="text-2xl font-bold text-emerald-600">0%</p>
+        </div>
+        <div>
+         <p class="text-sm text-gray-600">Soal Terjawab</p>
+         <p id="answers-count" class="text-2xl font-bold text-blue-600">0/11</p>
+        </div>
+        <div>
+         <p class="text-sm text-gray-600">Jawaban Benar</p>
+         <p id="correct-count" class="text-2xl font-bold text-green-600">0</p>
+        </div>
+       </div>
+      </div><!-- Feedback Message -->
+      <div id="feedback-message" class="mb-6"></div><!-- Options -->
+      <div id="options-container" class="space-y-3 mb-6"></div><!-- Reflection Video Container -->
+      <div id="reflection-video-container" class="hidden mb-6 bg-white rounded-2xl p-6 shadow-lg">
+       <div class="mb-6">
+        <video width="100%" height="400" controls style="border-radius: 0.75rem;">
+          <source src="Desain tanpa judul.mp4" type="video/mp4">
+          Browser Anda tidak mendukung video player HTML5.
+        </video>
+       </div>
+       <div class="bg-purple-50 border-l-4 border-purple-500 p-6 rounded-r-xl">
+        <p class="text-gray-700"><strong class="text-purple-700">🎵 Berita Cuaca - Lagu Tentang SDA</strong></p>
+        <p class="text-gray-600 text-sm mt-2">Lagu "Berita Cuaca" menceritakan tentang perubahan alam dan pentingnya menjaga kelestarian lingkungan serta SDA Indonesia. Setelah menonton video, jawab pertanyaan refleksi di bawah.</p>
+       </div>
+      </div><!-- Reflection Form Container -->
+      <div id="reflection-form-container" class="hidden mb-6 bg-white rounded-2xl p-6 shadow-lg">
+       <h3 class="text-lg font-bold text-gray-800 mb-4">Pertanyaan Refleksi</h3>
+       <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-xl mb-6">
+        <p class="text-gray-800 font-semibold"> Setelah kita mempelajari materi tentang SDA dan mendengarkan potongan lagu "Berita Cuaca", apa yang akan anda lakukan dalam pengelolaan SDA yang tepat?</p>
+       </div>
+       <div>
+        <label for="reflection-answer" class="block text-sm font-semibold text-gray-700 mb-2">Jawaban Anda:</label>
+        <textarea id="reflection-answer" class="w-full h-40 p-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all resize-none" placeholder="Tuliskan jawaban deskriptif Anda di sini. Jelaskan tindakan konkret yang akan Anda lakukan untuk mengelola SDA dengan baik..."></textarea>
+        <p class="text-xs text-gray-500 mt-2">Minimal 50 karakter</p>
+       </div>
+       <button type="button" onclick="submitReflection()" class="w-full bg-gradient-to-r from-indigo-500 to-blue-500 text-white px-6 py-3 rounded-full font-bold hover:opacity-90 transition-all shadow-lg mt-4 mb-4"> ✓ Kirim Jawaban Refleksi </button>
+       <div id="reflection-feedback" class="hidden mt-4"></div>
+      </div><!-- Navigation -->
+      <div class="flex justify-between gap-4"><button id="prev-btn" onclick="prevQuestion()" class="bg-gray-200 text-gray-700 px-6 py-3 rounded-full font-bold hover:bg-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled> ← Sebelumnya </button> <button id="next-btn" onclick="nextQuestion()" class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-full font-bold hover:opacity-90 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" disabled> Selanjutnya → </button>
+      </div>
+     </div><!-- Results Container -->
+    <div id="results-container" class="hidden bg-white rounded-3xl shadow-xl p-8 text-center">
+     <div id="results-icon" class="text-8xl mb-6"></div>
+     <h3 id="results-title" class="text-3xl font-bold text-gray-800 mb-4"></h3>
+     <p id="results-score" class="text-2xl font-bold text-gray-700 mb-6"></p>
+     <div id="results-message" class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-8 border border-blue-100 mb-8"></div>
+     <div id="results-siswa" class="mb-8 text-left max-w-xl mx-auto"></div>
+     <div id="results-review" class="mb-8 text-left max-w-xl mx-auto"></div>
+     <div class="flex justify-center gap-4"><button onclick="restartQuiz()" class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-8 py-3 rounded-full font-bold hover:opacity-90 transition-all shadow-lg"> 🔄 Ulangi Kuis </button> <button onclick="showSection('beranda')" class="bg-gray-200 text-gray-700 px-8 py-3 rounded-full font-bold hover:bg-gray-300 transition-all"> 🏠 Kembali ke Beranda </button>
+     </div>
+    </div>
+    </section>
+   </main><!-- Footer -->
+   <footer class="bg-gray-800 text-white py-8 mt-12">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+     <p class="text-gray-400 mb-2">Media Pembelajaran IPS - SMP</p>
+     <p class="text-gray-500 text-sm">© 2024 Materi Sumber Daya Alam</p>
+    </div>
+   </footer>
+  </div>
+  <script>
+    // Kuis Auth Logic
+    // Dashboard Guru Logic
+    const formLoginGuru = document.getElementById('form-login-guru');
+    const guruUsernameInput = document.getElementById('guru-username');
+    const guruPasswordInput = document.getElementById('guru-password');
+    const guruLoginError = document.getElementById('guru-login-error');
+    const guruLoginPanel = document.getElementById('guru-login-panel');
+    const dashboardGuruContent = document.getElementById('dashboard-guru-content');
+    const btnLogoutGuru = document.getElementById('btn-logout-guru');
+    const GURU_USERNAME = 'guru12345';
+    const GURU_PASSWORD = 'guru###';
+    const GURU_AUTH_KEY = 'guruDashboardLoggedIn';
+
+    function isGuruLoggedIn() {
+      return localStorage.getItem(GURU_AUTH_KEY) === 'true';
+    }
+
+    function updateGuruDashboardAccess() {
+      const loggedIn = isGuruLoggedIn();
+      if (guruLoginPanel) guruLoginPanel.classList.toggle('hidden', loggedIn);
+      if (dashboardGuruContent) dashboardGuruContent.classList.toggle('hidden', !loggedIn);
+    }
+
+    if (formLoginGuru) {
+      formLoginGuru.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = guruUsernameInput ? guruUsernameInput.value.trim() : '';
+        const password = guruPasswordInput ? guruPasswordInput.value : '';
+
+        if (username === GURU_USERNAME && password === GURU_PASSWORD) {
+          localStorage.setItem(GURU_AUTH_KEY, 'true');
+          if (guruLoginError) {
+            guruLoginError.textContent = '';
+            guruLoginError.classList.add('hidden');
+          }
+          updateGuruDashboardAccess();
+          if (typeof window._refreshSemuaPanel === 'function') {
+            window._refreshSemuaPanel();
+          }
+          if (typeof window.mulaiDashboardGuruPolling === 'function') {
+            window.mulaiDashboardGuruPolling();
+          }
+        } else {
+          localStorage.removeItem(GURU_AUTH_KEY);
+          if (guruLoginError) {
+            guruLoginError.textContent = 'Username atau password guru salah!';
+            guruLoginError.classList.remove('hidden');
+          }
+          updateGuruDashboardAccess();
+        }
+      });
+    }
+
+    if (btnLogoutGuru) {
+      btnLogoutGuru.addEventListener('click', function() {
+        localStorage.removeItem(GURU_AUTH_KEY);
+        if (typeof window.hentikanDashboardGuruPolling === 'function') {
+          window.hentikanDashboardGuruPolling();
+        }
+        if (guruUsernameInput) guruUsernameInput.value = '';
+        if (guruPasswordInput) guruPasswordInput.value = '';
+        if (guruLoginError) {
+          guruLoginError.textContent = '';
+          guruLoginError.classList.add('hidden');
+        }
+        updateGuruDashboardAccess();
+      });
+    }
+
+    updateGuruDashboardAccess();
+
+    const formDashboardGuru = document.getElementById('form-dashboard-guru');
+    const kodeKuisGuruInput = document.getElementById('kode-kuis-guru');
+    const dashboardGuruSuccess = document.getElementById('dashboard-guru-success');
+    if(formDashboardGuru) {
+      // Set input value dari localStorage jika ada
+      const kodeKuisTersimpan = localStorage.getItem('kodeKuisGuru') || 'IPS2024';
+      kodeKuisGuruInput.value = kodeKuisTersimpan;
+      formDashboardGuru.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const kodeBaru = kodeKuisGuruInput.value.trim();
+        if(!kodeBaru) return;
+        localStorage.setItem('kodeKuisGuru', kodeBaru);
+        dashboardGuruSuccess.textContent = 'Kode kuis berhasil disimpan!';
+        dashboardGuruSuccess.classList.remove('hidden');
+        setTimeout(()=>dashboardGuruSuccess.classList.add('hidden'), 2000);
+      });
+    }
+
+    // Kuis Auth Logic
+    const formKuisAuth = document.getElementById('form-kuis-auth');
+    const kodeKuisInput = document.getElementById('kode-kuis');
+    const namaLengkapInput = document.getElementById('nama-lengkap');
+    const noAbsenInput = document.getElementById('no-absen');
+    const errorAuth = document.getElementById('kuis-auth-error');
+    const kuisAuthDiv = document.getElementById('kuis-auth');
+    const kuisTitle = document.getElementById('kuis-title');
+    const characterSelection = document.getElementById('character-selection');
+    window.siswaNama = '';
+    window.siswaAbsen = '';
+    if(formKuisAuth) {
+      formKuisAuth.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const kode = kodeKuisInput.value.trim();
+        const nama = namaLengkapInput.value.trim();
+        const absen = noAbsenInput.value.trim();
+        const kodeKuisBenar = localStorage.getItem('kodeKuisGuru') || 'IPS2024';
+        if(!kode || !nama || !absen) {
+          errorAuth.textContent = 'Semua data harus diisi.';
+          errorAuth.classList.remove('hidden');
+          return;
+        }
+        if(kode !== kodeKuisBenar) {
+          errorAuth.textContent = 'Kode kuis salah!';
+          errorAuth.classList.remove('hidden');
+          return;
+        }
+        // Sukses login, masukkan ke daftar peserta (tanpa karakter)
+        window.siswaNama = nama;
+        window.siswaAbsen = absen;
+        try {
+          const pesertaKey = 'daftarPesertaKuis';
+          let daftar = [];
+          try { daftar = JSON.parse(localStorage.getItem(pesertaKey)) || []; } catch(e) { daftar = []; }
+          const idx = daftar.findIndex(p => p.nama === nama && p.absen === absen);
+          const pesertaBaru = { nama, absen, karakter: -1, waktu: new Date().toISOString() };
+          if(idx >= 0) daftar[idx] = pesertaBaru;
+          else daftar.push(pesertaBaru);
+          localStorage.setItem(pesertaKey, JSON.stringify(daftar));
+        } catch(e) {}
+        errorAuth.classList.add('hidden');
+        kuisAuthDiv.style.display = 'none';
+        document.getElementById('waiting-room').style.display = '';
+        tampilkanWaitingList();
+        tampilkanCharacterSelectionDiWaiting();
+        tungguKuisDimulaiOlehGuru();
+      });
+    }
+
+    // Fungsi halaman tunggu siswa
+    function tampilkanWaitingList() {
+      const el = document.getElementById('waiting-list');
+      if (!el) return;
+      let daftar = [];
+      try { daftar = JSON.parse(localStorage.getItem('daftarPesertaKuis')) || []; } catch(e) { daftar = []; }
+      el.innerHTML = daftar.length === 0 ? '<div class="text-gray-400">Belum ada peserta lain.</div>' :
+        '<ul class="text-left">' + daftar.map(p => `<li class="mb-1">${p.nama} <span class="text-xs text-gray-500">(Absen: ${p.absen})</span></li>`).join('') + '</ul>';
+    }
+    function tungguKuisDimulaiOlehGuru() {
+      // Cek status setiap 1 detik
+      const interval = setInterval(() => {
+        if(localStorage.getItem('kuisSudahDimulai') === 'true') {
+          clearInterval(interval);
+          document.getElementById('waiting-room').style.display = 'none';
+          // Cek apakah karakter sudah dipilih
+          let charIdx = selectedCharacter;
+          if (charIdx === -1 || typeof charIdx !== 'number') {
+            // Cek ke localStorage daftarPesertaKuis
+            try {
+              const pesertaKey = 'daftarPesertaKuis';
+              let daftar = [];
+              try { daftar = JSON.parse(localStorage.getItem(pesertaKey)) || []; } catch(e) { daftar = []; }
+              const idx = daftar.findIndex(p => p.nama === window.siswaNama && p.absen === window.siswaAbsen);
+              if(idx >= 0 && typeof daftar[idx].karakter === 'number' && daftar[idx].karakter >= 0) {
+                charIdx = daftar[idx].karakter;
+                selectedCharacter = charIdx;
+              }
+            } catch(e) {}
+          }
+          if(charIdx === -1 || typeof charIdx !== 'number') {
+            // Karakter belum dipilih: tampilkan pilihan karakter standalone (bukan di dalam waiting-room)
+            document.getElementById('waiting-room').style.display = 'none';
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('character-selection').style.display = '';
+            // Refresh highlight seandainya ada yang sudah dipilih sebelumnya
+            document.querySelectorAll('#character-selection .character-card').forEach((el, i) => {
+              el.classList.toggle('ring-4', i === selectedCharacter);
+              el.classList.toggle('ring-emerald-400', i === selectedCharacter);
+            });
+            return;
+          }
+          // Jika karakter sudah dipilih, baru jalankan countdown dan mulai kuis
+          mulaiCountdownAnim(function() {
+            kuisTitle.style.display = '';
+            mulaiKuisSetelahPilihKarakter();
+          });
+        } else {
+          tampilkanWaitingList();
+        }
+      }, 1000);
+    }
+
+    // Tampilkan pilihan karakter di waiting room menggunakan innerHTML (BUKAN memindahkan elemen)
+    function tampilkanCharacterSelectionDiWaiting() {
+      const dest = document.getElementById('waiting-character-selection');
+      if (!dest) return;
+      const chars = [
+        { emoji: '👨', nama: 'Andi',   cls: 'from-blue-100 to-blue-50 border-blue-200' },
+        { emoji: '👩', nama: 'Sinta',  cls: 'from-pink-100 to-pink-50 border-pink-200' },
+        { emoji: '🧑‍🦱', nama: 'Rafa',   cls: 'from-purple-100 to-purple-50 border-purple-200' },
+        { emoji: '👳', nama: 'Hendra', cls: 'from-yellow-100 to-yellow-50 border-yellow-200' },
+        { emoji: '🧔', nama: 'Budi',   cls: 'from-green-100 to-green-50 border-green-200' },
+        { emoji: '👩‍🦰', nama: 'Dina',   cls: 'from-red-100 to-red-50 border-red-200' },
+        { emoji: '🦹', nama: 'Supra',  cls: 'from-cyan-100 to-cyan-50 border-cyan-200' },
+        { emoji: '🦸', nama: 'Sary',   cls: 'from-orange-100 to-orange-50 border-orange-200' },
+      ];
+      dest.innerHTML = `
+        <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Pilih Karaktermu! 👤</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-2">
+          ${chars.map((c, i) => `
+            <div onclick="selectCharacter(${i})" class="character-card bg-gradient-to-br ${c.cls} p-4 rounded-2xl border-2 cursor-pointer hover:scale-110 transition-transform text-center">
+              <div class="text-5xl mb-2">${c.emoji}</div>
+              <p class="font-bold text-gray-800 text-sm">${c.nama}</p>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    // Setelah countdown, cek karakter sudah dipilih, jika belum, tetap di halaman karakter
+    function mulaiKuisSetelahPilihKarakter() {
+      // Guard: jangan mulai kuis jika guru belum menekan Mulai Kuis
+      if (localStorage.getItem('kuisSudahDimulai') !== 'true') {
+        // Kembalikan ke waiting room jika somehow dipanggil sebelum waktunya
+        document.getElementById('quiz-container').classList.add('hidden');
+        document.getElementById('character-selection').style.display = 'none';
+        document.getElementById('waiting-room').style.display = '';
+        return;
+      }
+      // Sinkronkan selectedCharacter dengan localStorage jika perlu
+      let charIdx = selectedCharacter;
+      if (charIdx === -1 || typeof charIdx !== 'number') {
+        try {
+          const pesertaKey = 'daftarPesertaKuis';
+          let daftar = [];
+          try { daftar = JSON.parse(localStorage.getItem(pesertaKey)) || []; } catch(e) { daftar = []; }
+          const idx = daftar.findIndex(p => p.nama === window.siswaNama && p.absen === window.siswaAbsen);
+          if(idx >= 0 && typeof daftar[idx].karakter === 'number' && daftar[idx].karakter >= 0) {
+            charIdx = daftar[idx].karakter;
+            selectedCharacter = charIdx;
+          }
+        } catch(e) {}
+      }
+      // Jika karakter belum dipilih, tampilkan pemilihan karakter dan JANGAN lanjut ke soal
+      if(charIdx === -1 || typeof charIdx !== 'number') {
+        document.getElementById('quiz-container').classList.add('hidden');
+        document.getElementById('character-selection').style.display = '';
+        // Alert hanya sekali
+        if (!window._sudahAlertPilihKarakter) {
+          window._sudahAlertPilihKarakter = true;
+          alert('Silakan pilih karakter terlebih dahulu!');
+        }
+        // Jangan panggil mulaiKuisSetelahPilihKarakter() lagi otomatis!
+        return;
+      }
+      // Jika karakter sudah dipilih, pastikan character-selection disembunyikan dan quiz-container tampil
+      document.getElementById('character-selection').style.display = 'none';
+      document.getElementById('kuis-title').style.display = '';
+      document.getElementById('quiz-container').classList.remove('hidden');
+      document.getElementById('total-questions').textContent = quizData.length;
+      if (typeof selectedCharacter === 'number' && selectedCharacter >= 0) {
+        loadQuestion();
+      }
+      window._sudahAlertPilihKarakter = false;
+    }
+
+    // Fungsi animasi countdown 3 2 1
+    function mulaiCountdownAnim(callback) {
+      const countdownDiv = document.getElementById('countdown-anim');
+      const numberDiv = document.getElementById('countdown-number');
+      countdownDiv.style.display = '';
+      let count = 3;
+      numberDiv.textContent = count;
+      numberDiv.classList.remove('text-red-500','text-yellow-500','text-emerald-600');
+      numberDiv.classList.add('text-emerald-600');
+      const colors = ['text-emerald-600','text-yellow-500','text-red-500'];
+      const interval = setInterval(() => {
+        count--;
+        if(count > 0) {
+          numberDiv.textContent = count;
+          numberDiv.className = 'text-7xl font-extrabold animate-bounce ' + colors[3-count];
+        } else if(count === 0) {
+          numberDiv.textContent = 'Mulai!';
+          numberDiv.className = 'text-7xl font-extrabold animate-bounce text-emerald-600';
+        } else {
+          clearInterval(interval);
+          countdownDiv.style.display = 'none';
+          if(typeof callback === 'function') callback();
+        }
+      }, 1000);
+    }
+
+    // Simpan jawaban siswa untuk review
+    let siswaJawaban = [];
+    // Modifikasi fungsi submit jawaban quiz (asumsi ada fungsi submitQuiz atau showResults)
+    // Patch ke fungsi showResults (atau fungsi serupa) di bawah ini:
+    // --- PATCH START ---
+    // Temukan fungsi yang menampilkan hasil, lalu tambahkan kode berikut:
+    function showResults() {
+      // Calculate score only for multiple choice questions (10 questions), not the reflection
+      const multiChoiceQuestions = 10;
+      const percentage = (correctCount / multiChoiceQuestions) * 100;
+      
+      // SAVE SCORE TO LEADERBOARD
+      try {
+        const scoresKey = 'kuisScores';
+        let scores = [];
+        try { scores = JSON.parse(localStorage.getItem(scoresKey)) || []; } catch(e) { scores = []; }
+        
+        // Find if this student already has a score, if so replace it with the highest
+        const existingIdx = scores.findIndex(s => s.nama === window.siswaNama && s.absen === window.siswaAbsen);
+        const newScore = { nama: window.siswaNama, absen: window.siswaAbsen, score: correctCount, percentage: percentage, time: new Date().toISOString() };
+        
+        if (existingIdx >= 0) {
+          // Replace only if new score is higher
+          if (correctCount > scores[existingIdx].score) {
+            scores[existingIdx] = newScore;
+          }
+        } else {
+          scores.push(newScore);
+        }
+        localStorage.setItem(scoresKey, JSON.stringify(scores));
+      } catch(e) {
+        console.error('Error saving score:', e);
+      }
+      // UPDATE PROGRESS sebagai selesai
+      try {
+        const progressKey = 'kuisProgress';
+        let allProgress = {};
+        try { allProgress = JSON.parse(localStorage.getItem(progressKey)) || {}; } catch(e) { allProgress = {}; }
+        const key = window.siswaNama + '__' + window.siswaAbsen;
+        allProgress[key] = {
+          nama: window.siswaNama,
+          absen: window.siswaAbsen,
+          soal: 10,
+          benar: correctCount,
+          karakter: selectedCharacter,
+          selesai: true,
+          update: new Date().toISOString()
+        };
+        localStorage.setItem(progressKey, JSON.stringify(allProgress));
+      } catch(e) {}
+      
+      document.getElementById('quiz-container').classList.add('hidden');
+      document.getElementById('results-container').classList.remove('hidden');
+      let icon, title, message;
+      const namaSiswaTampil = window.siswaNama || '-';
+      if (percentage >= 80) {
+        icon = '🏆';
+        title = `${namaSiswaTampil} Juara!`;
+        message = `<p class="text-gray-700"><strong>${namaSiswaTampil}</strong> Finish Line dengan sempurna! 🎉 Kamu sangat memahami SDA!</p>`;
+      } else if (percentage >= 60) {
+        icon = '👍';
+        title = `${namaSiswaTampil} Bagus!`;
+        message = `<p class="text-gray-700"><strong>${namaSiswaTampil}</strong> mencapai garis finish dengan baik! 💪 Pelajari materi lebih dalam untuk hasil lebih sempurna!</p>`;
+      } else {
+        icon = '📚';
+        title = `${namaSiswaTampil} Tetap Semangat!`;
+        message = `<p class="text-gray-700"><strong>${namaSiswaTampil}</strong> perlu latihan lebih! 🚀 Baca ulang materi dan coba lagi!`;
+      }
+      document.getElementById('results-icon').textContent = icon;
+      document.getElementById('results-title').textContent = title;
+      document.getElementById('results-score').textContent = `${correctCount}/${multiChoiceQuestions} Benar (${Math.round(percentage)}%)`;
+      document.getElementById('results-message').innerHTML = message;
+
+      // Tampilkan identitas siswa
+      const resultsSiswa = document.getElementById('results-siswa');
+      if(resultsSiswa) {
+        resultsSiswa.innerHTML = `<div class="mb-2"><b>Nama:</b> ${window.siswaNama || '-'}<br><b>No Absen:</b> ${window.siswaAbsen || '-'}</div>`;
+      }
+      // Tampilkan ulasan jawaban
+      const resultsReview = document.getElementById('results-review');
+      if(resultsReview) {
+        let html = '<b>Ulasan Jawaban:</b><ol class="list-decimal ml-6 mt-2">';
+        for(let i=0; i<multiChoiceQuestions; i++) {
+          const q = quizData[i];
+          const ans = answers[i];
+          const selected = ans && typeof ans.selected === 'number' ? q.options[ans.selected] : '-';
+          const isCorrect = ans && ans.selected === q.correct;
+          html += `<li class="mb-2">${q.question}<br><span class="inline-block px-2 py-1 rounded ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">Jawaban Anda: ${selected}${isCorrect ? ' (Benar)' : ' (Salah)'}</span></li>`;
+        }
+        // Tambahkan ulasan jawaban reflektif (ambil dari textarea reflection-answer)
+        const reflektifIdx = multiChoiceQuestions;
+        let reflektifAns = '';
+        if (answers[reflektifIdx] && answers[reflektifIdx].value) {
+          reflektifAns = answers[reflektifIdx].value;
+        } else {
+          // fallback: ambil dari textarea jika belum tersimpan
+          const refleksiInput = document.getElementById('reflection-answer');
+          if (refleksiInput && refleksiInput.value) {
+            reflektifAns = refleksiInput.value;
+          }
+        }
+        html += `<li class="mb-2"><b>Pertanyaan Refleksi:</b><br><span class="inline-block px-2 py-1 rounded bg-blue-100 text-blue-700">${reflektifAns ? reflektifAns : 'Belum dijawab'}</span></li>`;
+        html += '</ol>';
+        resultsReview.innerHTML = html;
+      }
+    }
+    // --- PATCH END ---
+    // Quiz Data
+    const quizData = [
+      {
+        question: "Sumber daya alam adalah …",
+        options: [
+          "Segala sesuatu yang dibuat manusia untuk memenuhi kebutuhan hidup",
+          "Segala sesuatu yang berasal dari alam dan dapat dimanfaatkan manusia",
+          "Semua barang yang dijual di pasar",
+          "Semua benda yang ada di rumah"
+        ],
+        correct: 1
+      },
+      {
+        question: "Contoh sumber daya alam yang dapat diperbarui adalah …",
+        options: [
+          "Batu bara",
+          "Minyak bumi",
+          "Air",
+          "Emas"
+        ],
+        correct: 2
+      },
+      {
+        question: "Berikut yang termasuk sumber daya alam yang tidak dapat diperbarui adalah …",
+        options: [
+          "Matahari",
+          "Angin",
+          "Minyak bumi",
+          "Air"
+        ],
+        correct: 2
+      },
+      {
+        question: "Manfaat hutan sebagai sumber daya alam adalah …",
+        options: [
+          "Tempat pembuangan sampah",
+          "Sumber bahan makanan dan kayu",
+          "Tempat pembangunan pabrik",
+          "Tempat parkir kendaraan"
+        ],
+        correct: 1
+      },
+      {
+        question: "Contoh sumber daya alam yang berasal dari hewan adalah …",
+        options: [
+          "Kayu",
+          "Susu",
+          "Batu",
+          "Pasir"
+        ],
+        correct: 1
+      },
+      {
+        question: "Tanah dimanfaatkan manusia untuk …",
+        options: [
+          "Tempat menanam tanaman",
+          "Tempat membuang limbah",
+          "Tempat membakar sampah",
+          "Tempat menyimpan batu"
+        ],
+        correct: 0
+      },
+      {
+        question: "Berikut yang termasuk sumber daya alam hayati adalah …",
+        options: [
+          "Tumbuhan",
+          "Air",
+          "Batu",
+          "Tanah"
+        ],
+        correct: 0
+      },
+      {
+        question: "Contoh sumber daya alam yang dimanfaatkan sebagai bahan bakar adalah …",
+        options: [
+          "Minyak bumi",
+          "Air laut",
+          "Tanah liat",
+          "Pasir"
+        ],
+        correct: 0
+      },
+      {
+        question: "Sumber daya alam yang berasal dari makhluk hidup disebut …",
+        options: [
+          "SDA nonhayati",
+          "SDA buatan",
+          "SDA hayati",
+          "SDA tambang"
+        ],
+        correct: 2
+      },
+      {
+        question: "Berikut ini yang merupakan manfaat air bagi manusia adalah …",
+        options: [
+          "Untuk bahan bangunan",
+          "Untuk minum dan kebutuhan sehari-hari",
+          "Untuk membuat kendaraan",
+          "Untuk membuat plastik"
+        ],
+        correct: 1
+      },
+      {
+        question: "Tonton video dibawah ini, dengarkan dan amati untuk bisa menjawab pertanyaan refleksi dibawah ini",
+        isReflection: true,
+        type: "deskripsi"
+      }
+    ];
+
+    const characters = ['👨', '👩', '🧑‍🦱', '👳', '🧔', '👩‍🦰', '🦹', '🦸'];
+    const characterNames = ['Andi', 'Sinta', 'Rafa', 'Hendra', 'Budi', 'Dina', 'Supra', 'Sary'];
+
+    let currentQuestion = 0;
+    let selectedCharacter = -1;
+    let answers = new Array(quizData.length).fill(null);
+    let correctCount = 0;
+
+    const defaultConfig = {
+      main_title: 'Sumber Daya Alam',
+      subtitle: 'Media Pembelajaran IPS - SMP Kelas VII'
+    };
+
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
+          document.getElementById('subtitle').textContent = config.subtitle || defaultConfig.subtitle;
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['main_title', config.main_title || defaultConfig.main_title],
+          ['subtitle', config.subtitle || defaultConfig.subtitle]
+        ])
+      });
+    }
+
+    // Navigation
+    function showSection(sectionId) {
+      if (sectionId === 'dashboard-guru') {
+        updateGuruDashboardAccess();
+      }
+
+      document.querySelectorAll('.section-content').forEach(section => {
+        section.classList.add('hidden');
+      });
+      document.getElementById(sectionId).classList.remove('hidden');
+      
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.section === sectionId) {
+          btn.classList.add('active');
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showSDATab(tabId) {
+      document.querySelectorAll('.sda-content').forEach(content => {
+        content.classList.add('hidden');
+      });
+      document.getElementById('tab-' + tabId).classList.remove('hidden');
+      
+      document.querySelectorAll('.sda-tab').forEach(tab => {
+        tab.classList.remove('bg-emerald-500', 'text-white');
+        tab.classList.add('bg-gray-200', 'text-gray-700');
+        if (tab.dataset.tab === tabId) {
+          tab.classList.remove('bg-gray-200', 'text-gray-700');
+          tab.classList.add('bg-emerald-500', 'text-white');
+        }
+      });
+    }
+
+    // Racing Quiz Functions
+    function selectCharacter(index) {
+      selectedCharacter = index;
+      // Simpan karakter ke localStorage daftarPesertaKuis
+      try {
+        const pesertaKey = 'daftarPesertaKuis';
+        let daftar = [];
+        try { daftar = JSON.parse(localStorage.getItem(pesertaKey)) || []; } catch(e) { daftar = []; }
+        const idx = daftar.findIndex(p => p.nama === window.siswaNama && p.absen === window.siswaAbsen);
+        if(idx >= 0) {
+          daftar[idx].karakter = index;
+          localStorage.setItem(pesertaKey, JSON.stringify(daftar));
+        }
+      } catch(e) {}
+      // Highlight pilihan karakter
+      document.querySelectorAll('.character-card').forEach((el, i) => {
+        if(i === index) el.classList.add('ring-4', 'ring-emerald-400');
+        else el.classList.remove('ring-4', 'ring-emerald-400');
+      });
+      // Hanya lanjut ke soal jika kuis sudah dimulai oleh guru
+      if (localStorage.getItem('kuisSudahDimulai') === 'true') {
+        // Karakter baru dipilih setelah guru mulai: jalankan countdown lalu mulai soal
+        mulaiCountdownAnim(function() {
+          kuisTitle.style.display = '';
+          mulaiKuisSetelahPilihKarakter();
+        });
+      } else {
+        // Tampilkan konfirmasi bahwa karakter telah tersimpan, masih menunggu guru
+        const info = document.getElementById('waiting-character-info');
+        if (info) {
+          const karakterNama = ['Andi','Sinta','Rafa','Hendra','Budi','Dina','Supra','Sary'];
+          const karakterEmojis = ['👨','👩','🧑\u200d🦱','👳','🧔','👩\u200d🦰','🦹','🦸'];
+          info.innerHTML = `<div class="flex items-center gap-2 justify-center text-emerald-700 font-semibold mt-2">
+            <span style="font-size:1.8rem">${karakterEmojis[index] || '🏃'}</span>
+            <span>Karakter <b>${karakterNama[index] || ''}</b> dipilih! Menunggu guru memulai kuis...</span>
+          </div>`;
+        }
+      }
+    }
+
+    function joinWithCode() {
+      const code = document.getElementById('quiz-code-input').value;
+      if (code.length > 0) {
+        selectCharacter(0); // Use first character by default
+      }
+    }
+
+    function loadQuestion() {
+      const question = quizData[currentQuestion];
+      const isReflection = question.isReflection;
+      
+      document.getElementById('question-text').textContent = `${currentQuestion + 1}. ${question.question}`;
+      document.getElementById('current-question').textContent = currentQuestion + 1;
+      document.getElementById('progress-bar').style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
+      
+      // Hide/show reflection containers
+      if (isReflection) {
+        document.getElementById('reflection-video-container').classList.remove('hidden');
+        document.getElementById('reflection-form-container').classList.remove('hidden');
+        document.getElementById('options-container').classList.add('hidden');
+      } else {
+        document.getElementById('reflection-video-container').classList.add('hidden');
+        document.getElementById('reflection-form-container').classList.add('hidden');
+        document.getElementById('options-container').classList.remove('hidden');
+      }
+      
+      if (!isReflection) {
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+        
+        question.options.forEach((option, index) => {
+          const optionBtn = document.createElement('button');
+          optionBtn.className = 'quiz-option w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-emerald-400 transition-all';
+          optionBtn.innerHTML = `<span class="font-bold text-emerald-600 mr-3">${String.fromCharCode(65 + index)}.</span> <span>${option}</span>`;
+          
+          // restore selection and evaluation state
+          if (answers[currentQuestion] && answers[currentQuestion].type === 'choice') {
+            if (answers[currentQuestion].value === index) {
+              optionBtn.classList.add('selected');
+            }
+            if (answers[currentQuestion].evaluated) {
+              const isCorrect = index === question.correct;
+              if (answers[currentQuestion].value === index) {
+                optionBtn.classList.add(isCorrect ? 'correct' : 'wrong');
+              }
+              // disable all options once evaluated
+              optionBtn.disabled = true;
+            }
+          }
+          
+          optionBtn.onclick = () => selectAnswer(index);
+          optionsContainer.appendChild(optionBtn);
+        });
+      } else {
+        // For reflection, restore previous answer if exists
+        const reflectionAnswer = document.getElementById('reflection-answer');
+        if (answers[currentQuestion] && answers[currentQuestion].type === 'reflection') {
+          reflectionAnswer.value = answers[currentQuestion].value;
+        } else {
+          reflectionAnswer.value = '';
+        }
+        document.getElementById('reflection-feedback').classList.add('hidden');
+      }
+
+      document.getElementById('feedback-message').innerHTML = '';
+      document.getElementById('prev-btn').disabled = currentQuestion === 0;
+      
+      if (currentQuestion === quizData.length - 1) {
+        document.getElementById('next-btn').textContent = 'Lihat Hasil ✓';
+      } else {
+        document.getElementById('next-btn').textContent = 'Selanjutnya →';
+      }
+      
+      // For reflection, button is enabled after submission
+      if (isReflection) {
+        document.getElementById('next-btn').disabled = !answers[currentQuestion] || answers[currentQuestion].type !== 'reflection';
+      } else {
+        document.getElementById('next-btn').disabled = answers[currentQuestion] === null;
+      }
+    }
+
+    function selectAnswer(index) {
+      // store response but do not evaluate yet
+      answers[currentQuestion] = { type: 'choice', value: index, evaluated: false };
+      // highlight selection only
+      document.querySelectorAll('.quiz-option').forEach((btn, i) => {
+        btn.classList.remove('selected', 'correct', 'wrong');
+        if (i === index) {
+          btn.classList.add('selected');
+        }
+      });
+      document.getElementById('next-btn').disabled = false;
+    }
+    
+    function submitReflection() {
+      const reflectionAnswer = document.getElementById('reflection-answer').value.trim();
+      const feedback = document.getElementById('reflection-feedback');
+      
+      if (reflectionAnswer.length < 50) {
+        feedback.classList.remove('hidden');
+        feedback.innerHTML = '<div class="bg-red-50 border border-red-200 rounded-xl p-4"><p class="text-red-700 font-semibold">❌ Jawaban terlalu singkat! Minimal 50 karakter diperlukan.</p></div>';
+        return;
+      }
+      
+      answers[currentQuestion] = { type: 'reflection', value: reflectionAnswer };
+      
+      feedback.classList.remove('hidden');
+      feedback.innerHTML = `
+        <div class="bg-green-50 border border-green-200 rounded-xl p-4 answer-feedback">
+          <p class="text-green-700 font-semibold">✅ Jawaban refleksi Anda telah diterima!</p>
+          <p class="text-green-600 text-sm mt-2">Terima kasih! Menampilkan hasil skor...</p>
+        </div>
+      `;
+      
+      document.getElementById('next-btn').disabled = false;
+      // langsung lanjut ke hasil tanpa perlu klik
+      showResults();
+    }
+
+    function animateRacerRun() {
+      const racer = document.getElementById('racer-position');
+      const distance = (correctCount / quizData.length) * 100;
+      racer.textContent = characters[selectedCharacter];
+      racer.classList.remove('falling');
+      racer.classList.add('running');
+      racer.style.left = distance + '%';
+      
+      setTimeout(() => {
+        racer.classList.remove('running');
+      }, 800);
+    }
+
+    function evaluateAnswerIfNeeded() {
+      const entry = answers[currentQuestion];
+      if (!entry || entry.type !== 'choice' || entry.evaluated) return;
+      const index = entry.value;
+      const question = quizData[currentQuestion];
+      const isCorrect = index === question.correct;
+
+      // apply feedback classes and disable options
+      document.querySelectorAll('.quiz-option').forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === index) {
+          btn.classList.remove('selected');
+          btn.classList.add(isCorrect ? 'correct' : 'wrong');
+        }
+      });
+
+      if (isCorrect) {
+        correctCount++;
+        animateRacerRun();
+        showFeedback('✅ Jawaban Benar!', 'text-green-600');
+      } else {
+        animateRacerFall();
+        showFeedback('❌ Jawaban Salah!', 'text-red-600');
+      }
+
+      updateStats();
+      entry.evaluated = true;
+    }
+
+    function animateRacerFall() {
+      const racer = document.getElementById('racer-position');
+      racer.textContent = characters[selectedCharacter];
+      racer.classList.remove('running');
+      racer.classList.add('falling');
+      
+      setTimeout(() => {
+        racer.classList.remove('falling');
+        const distance = (correctCount / quizData.length) * 100;
+        racer.style.left = distance + '%';
+      }, 800);
+    }
+
+    function showFeedback(message, className) {
+      const feedbackDiv = document.getElementById('feedback-message');
+      feedbackDiv.innerHTML = `<div class="answer-feedback bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-4 border border-blue-200"><p class="font-bold ${className}">${message}</p></div>`;
+    }
+
+    function updateStats() {
+      const distance = (correctCount / quizData.length) * 100;
+      document.getElementById('racer-distance').textContent = Math.round(distance) + '%';
+      document.getElementById('answers-count').textContent = (currentQuestion + 1) + '/' + quizData.length;
+      document.getElementById('correct-count').textContent = correctCount;
+      // Simpan progress realtime ke localStorage untuk dashboard guru
+      try {
+        const progressKey = 'kuisProgress';
+        let allProgress = {};
+        try { allProgress = JSON.parse(localStorage.getItem(progressKey)) || {}; } catch(e) { allProgress = {}; }
+        const key = window.siswaNama + '__' + window.siswaAbsen;
+        allProgress[key] = {
+          nama: window.siswaNama,
+          absen: window.siswaAbsen,
+          soal: currentQuestion + 1,
+          benar: correctCount,
+          karakter: selectedCharacter,
+          selesai: false,
+          update: new Date().toISOString()
+        };
+        localStorage.setItem(progressKey, JSON.stringify(allProgress));
+      } catch(e) {}
+    }
+
+    function nextQuestion() {
+      // evaluate the current answer if not yet done
+      const entry = answers[currentQuestion];
+      if (entry && entry.type === 'choice' && !entry.evaluated) {
+        evaluateAnswerIfNeeded();
+      }
+
+      if (currentQuestion < quizData.length - 1) {
+        currentQuestion++;
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        loadQuestion();
+      }
+    }
+
+    function showResults() {
+      // Calculate score only for multiple choice questions (10 questions), not the reflection
+      const multiChoiceQuestions = 10;
+      const percentage = (correctCount / multiChoiceQuestions) * 100;
+      document.getElementById('quiz-container').classList.add('hidden');
+      document.getElementById('results-container').classList.remove('hidden');
+      let icon, title, message;
+      const namaSiswaTampil = window.siswaNama || '-';
+      if (percentage >= 80) {
+        icon = '🏆';
+        title = `${namaSiswaTampil} Juara!`;
+        message = `<p class="text-gray-700"><strong>${namaSiswaTampil}</strong> Finish Line dengan sempurna! 🎉 Kamu sangat memahami SDA!</p>`;
+      } else if (percentage >= 60) {
+        icon = '👍';
+        title = `${namaSiswaTampil} Bagus!`;
+        message = `<p class="text-gray-700"><strong>${namaSiswaTampil}</strong> mencapai garis finish dengan baik! 💪 Pelajari materi lebih dalam untuk hasil lebih sempurna!</p>`;
+      } else {
+        icon = '📚';
+        title = `${namaSiswaTampil} Tetap Semangat!`;
+        message = `<p class="text-gray-700"><strong>${namaSiswaTampil}</strong> perlu latihan lebih! 🚀 Baca ulang materi dan coba lagi!`;
+      }
+      document.getElementById('results-icon').textContent = icon;
+      document.getElementById('results-title').textContent = title;
+      document.getElementById('results-score').textContent = `${correctCount}/${multiChoiceQuestions} Benar (${Math.round(percentage)}%)`;
+      document.getElementById('results-message').innerHTML = message;
+
+      // --- Tambahan: identitas siswa dan ulasan jawaban ---
+      const resultsSiswa = document.getElementById('results-siswa');
+      if(resultsSiswa) {
+        resultsSiswa.innerHTML = `<div class="mb-2"><b>Nama:</b> ${window.siswaNama || '-'}<br><b>No Absen:</b> ${window.siswaAbsen || '-'}</div>`;
+      }
+      // Review jawaban
+      const resultsReview = document.getElementById('results-review');
+      if(resultsReview) {
+        let html = '<b>Ulasan Jawaban:</b><ol class="list-decimal ml-6 mt-2">';
+        for(let i=0; i<multiChoiceQuestions; i++) {
+          const q = quizData[i];
+          const ans = answers[i];
+          const selected = ans && typeof ans.selected === 'number' ? q.options[ans.selected] : '-';
+          const isCorrect = ans && ans.selected === q.correct;
+          html += `<li class="mb-2">${q.question}<br><span class="inline-block px-2 py-1 rounded ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">Jawaban Anda: ${selected}${isCorrect ? ' (Benar)' : ' (Salah)'}</span></li>`;
+        }
+        // Tambahkan ulasan jawaban reflektif (ambil dari answers)
+        const reflektifIdx = multiChoiceQuestions;
+        let reflektifAns = '';
+        if (answers[reflektifIdx] && answers[reflektifIdx].value) {
+          reflektifAns = answers[reflektifIdx].value;
+        } else {
+          // fallback: ambil dari textarea jika belum tersimpan
+          const refleksiInput = document.getElementById('reflection-answer');
+          if (refleksiInput && refleksiInput.value) {
+            reflektifAns = refleksiInput.value;
+          }
+        }
+        html += `<li class="mb-2"><b>Pertanyaan Refleksi:</b><br><span class="inline-block px-2 py-1 rounded bg-blue-100 text-blue-700">${reflektifAns ? reflektifAns : 'Belum dijawab'}</span></li>`;
+        html += '</ol>';
+        resultsReview.innerHTML = html;
+      }
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      selectedCharacter = -1;
+      answers = new Array(quizData.length).fill(null);
+      correctCount = 0;
+      
+      document.getElementById('results-container').classList.add('hidden');
+      document.getElementById('character-selection').classList.remove('hidden');
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      showSection('beranda');
+    });
+  </script>
+  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9da792c881c3feae',t:'MTc3MzIwMDgwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
